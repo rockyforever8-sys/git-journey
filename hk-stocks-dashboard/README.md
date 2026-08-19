@@ -1,23 +1,25 @@
 # Hong Kong Stocks Performance Dashboard
 
-An interactive dashboard for tracking performance and trend statistics of five preferred Hong Kong blue-chip stocks.
+An interactive dashboard for tracking performance and trend statistics of seven preferred Hong Kong stocks.
 
 ## Featured stocks
 
 | Code | Company | Sector |
 |------|---------|--------|
-| 0700 | Tencent Holdings | Technology |
-| 0005 | HSBC Holdings | Financials |
+| 2476 | Victory Giant Technology (VGT) | Technology |
+| 0823 | Link REIT | Real Estate |
 | 9988 | Alibaba Group | Consumer Discretionary |
-| 1299 | AIA Group | Financials |
-| 3690 | Meituan | Consumer Discretionary |
+| 9618 | JD.com | Consumer Discretionary |
+| 6809 | Montage Technology | Technology |
+| 0981 | SMIC | Technology |
+| 1211 | BYD Company | Consumer Discretionary |
 
 ## Features
 
 - **Price & indexed performance charts** — compare selected stocks vs the Hang Seng Index
 - **Time ranges** — 1M, 3M, 6M, YTD, 1Y, and full history
 - **Risk metrics** — volatility, Sharpe ratio, max drawdown, beta vs HSI
-- **Trend signals** — RSI, SMA 20/50 crossover, bullish/neutral/bearish label
+- **Trend signals** — RSI, SMA 20/50 crossover, bullish/neutral/bearish labels
 - **Correlation heatmap** — daily return correlations across the portfolio
 - **Rolling volatility** — 20-day annualized vol for the focused stock
 

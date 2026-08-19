@@ -11,18 +11,18 @@ import yfinance as yf
 
 STOCKS = [
     {
-        "id": "0700",
-        "ticker": "0700.HK",
-        "name": "Tencent Holdings",
+        "id": "2476",
+        "ticker": "2476.HK",
+        "name": "Victory Giant Technology",
         "sector": "Technology",
         "color": "#38bdf8",
     },
     {
-        "id": "0005",
-        "ticker": "0005.HK",
-        "name": "HSBC Holdings",
-        "sector": "Financials",
-        "color": "#f472b6",
+        "id": "0823",
+        "ticker": "0823.HK",
+        "name": "Link REIT",
+        "sector": "Real Estate",
+        "color": "#34d399",
     },
     {
         "id": "9988",
@@ -32,18 +32,32 @@ STOCKS = [
         "color": "#fb923c",
     },
     {
-        "id": "1299",
-        "ticker": "1299.HK",
-        "name": "AIA Group",
-        "sector": "Financials",
-        "color": "#34d399",
+        "id": "9618",
+        "ticker": "9618.HK",
+        "name": "JD.com",
+        "sector": "Consumer Discretionary",
+        "color": "#f472b6",
     },
     {
-        "id": "3690",
-        "ticker": "3690.HK",
-        "name": "Meituan",
-        "sector": "Consumer Discretionary",
+        "id": "6809",
+        "ticker": "6809.HK",
+        "name": "Montage Technology",
+        "sector": "Technology",
         "color": "#a78bfa",
+    },
+    {
+        "id": "0981",
+        "ticker": "0981.HK",
+        "name": "SMIC",
+        "sector": "Technology",
+        "color": "#fbbf24",
+    },
+    {
+        "id": "1211",
+        "ticker": "1211.HK",
+        "name": "BYD Company",
+        "sector": "Consumer Discretionary",
+        "color": "#22d3ee",
     },
 ]
 

@@ -279,13 +279,13 @@ export default function App() {
           <div>
             <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-hk-gold/30 bg-hk-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-hk-gold">
               <TrendingUp className="h-3.5 w-3.5" />
-              Hang Seng Blue Chips
+              HK Watchlist
             </div>
             <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
               HK Stocks Performance Dashboard
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-              Track price trends, risk metrics, and return statistics for your preferred five Hong Kong
+              Track price trends, risk metrics, and return statistics for your seven preferred Hong Kong
               equities. Data refreshes on each build via Yahoo Finance.
             </p>
           </div>
@@ -390,7 +390,7 @@ export default function App() {
         />
       </section>
 
-      <section className="mb-8 grid gap-6 xl:grid-cols-3">
+      <section className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {stocks.map((stock) => (
           <StockCard
             key={stock.id}
@@ -538,7 +538,7 @@ export default function App() {
 
         <div className="rounded-2xl border border-slate-700/60 bg-slate-900/40 p-5">
           <h2 className="font-display text-xl font-semibold text-white">Return correlations</h2>
-          <p className="mb-4 text-sm text-slate-400">Daily return correlation across your five stocks.</p>
+          <p className="mb-4 text-sm text-slate-400">Daily return correlation across your seven stocks.</p>
           <CorrelationHeatmap
             ids={PREFERRED_STOCK_IDS}
             labels={Object.fromEntries(stocks.map((stock) => [stock.id, stock.id]))}
@@ -613,8 +613,8 @@ export default function App() {
 
       <footer className="mt-8 border-t border-slate-800 pt-6 text-xs text-slate-500">
         <p>
-          Stocks: Tencent (0700), HSBC (0005), Alibaba (9988), AIA (1299), and Meituan (3690) — top Hang Seng
-          constituents commonly held by Hong Kong investors. Metrics are indicative; not investment advice.
+          Watchlist: VGT (2476), Link REIT (0823), Alibaba (9988), JD.com (9618), Montage Technology (6809),
+          SMIC (0981), and BYD (1211). Metrics are indicative; not investment advice.
         </p>
       </footer>
     </div>
