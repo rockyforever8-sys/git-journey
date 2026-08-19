@@ -5,8 +5,7 @@ module.exports = function (api) {
       [
         'babel-preset-expo',
         {
-          // Expo Go SDK 54 Hermes does not parse `#private` fields.
-          // hermes-v0 transpiles them away; hermes-stable leaves them in the bundle.
+          // Transpile `#private` fields for Expo Go SDK 54 Hermes.
           unstable_transformProfile: 'hermes-v0',
         },
       ],
