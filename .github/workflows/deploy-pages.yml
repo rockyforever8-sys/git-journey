@@ -1,0 +1,65 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'hk-ib-dashboard/**'
+      - 'ml-agent-dashboard/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build HK IB Dashboard
+        run: |
+          npm ci
+          npm run build
+        working-directory: hk-ib-dashboard
+
+      - name: Build ML Agent Dashboard (web)
+        env:
+          EXPO_BASE_URL: /git-journey/ml-agent-dashboard
+        run: |
+          npm ci --legacy-peer-deps
+          npx expo export -p web
+        working-directory: ml-agent-dashboard
+
+      - name: Assemble site
+        run: |
+          mkdir -p site/hk-ib-dashboard site/ml-agent-dashboard
+          cp -r hk-ib-dashboard/dist/* site/hk-ib-dashboard/
+          cp -r ml-agent-dashboard/dist/* site/ml-agent-dashboard/
+          cp ml-agent-dashboard/dist/index.html site/ml-agent-dashboard/404.html
+          cp .github/pages/index.html site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

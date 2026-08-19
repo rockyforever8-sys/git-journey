@@ -17,7 +17,21 @@ Built with **Expo (React Native)** for a single codebase, dark-minimal UI, syste
 - **PDF export** via share sheet
 - **Clickable citations** to approved public references
 
-## Quick start (easy — minimal typing)
+## Share with friends (website link)
+
+The app is published as a mobile-friendly website on GitHub Pages:
+
+**https://rockyforever8-sys.github.io/git-journey/ml-agent-dashboard/**
+
+Send that link in WhatsApp, email, or text. Your friend opens it in Chrome/Safari on their phone — no Expo Go or install needed.
+
+Landing page (both dashboards): **https://rockyforever8-sys.github.io/git-journey/**
+
+Redeploy happens automatically when `main` is updated (GitHub Actions).
+
+---
+
+## Quick start (local dev)
 
 **Tip:** You do not need to type commands by hand. **Copy → paste** into the terminal (Mac: `Cmd+V`, Windows: right-click → Paste).
 
