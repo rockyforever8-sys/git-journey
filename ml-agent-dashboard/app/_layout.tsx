@@ -1,9 +1,17 @@
 import { Stack } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
+import { useEffect } from 'react'
 import { ThemeProvider, useTheme } from '@/theme/ThemeContext'
+
+SplashScreen.preventAutoHideAsync().catch(() => undefined)
 
 function RootLayoutNav() {
   const { colors, isDark } = useTheme()
+
+  useEffect(() => {
+    SplashScreen.hideAsync().catch(() => undefined)
+  }, [])
 
   return (
     <>
