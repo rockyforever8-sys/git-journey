@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'hk-ib-dashboard/**'
+      - 'hk-stocks-dashboard/**'
       - 'ml-agent-dashboard/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
@@ -34,6 +35,13 @@ jobs:
           npm run build
         working-directory: hk-ib-dashboard
 
+      - name: Build HK Stocks Dashboard
+        run: |
+          pip install -r scripts/requirements.txt
+          npm ci
+          npm run build
+        working-directory: hk-stocks-dashboard
+
       - name: Build ML Agent Dashboard (web)
         env:
           EXPO_BASE_URL: /git-journey/ml-agent-dashboard
@@ -44,8 +52,9 @@ jobs:
 
       - name: Assemble site
         run: |
-          mkdir -p site/hk-ib-dashboard site/ml-agent-dashboard
+          mkdir -p site/hk-ib-dashboard site/hk-stocks-dashboard site/ml-agent-dashboard
           cp -r hk-ib-dashboard/dist/* site/hk-ib-dashboard/
+          cp -r hk-stocks-dashboard/dist/* site/hk-stocks-dashboard/
           cp -r ml-agent-dashboard/dist/* site/ml-agent-dashboard/
           cp ml-agent-dashboard/dist/index.html site/ml-agent-dashboard/404.html
           cp .github/pages/index.html site/index.html
