@@ -19,17 +19,65 @@ Built with **Expo (React Native)** for a single codebase, dark-minimal UI, syste
 
 ## Quick start
 
+### 1. Install Expo Go on your phone
+
+- **Android**: [Google Play — Expo Go](https://play.google.com/store/apps/details?id=host.exp.exponent)
+- **iPhone**: [App Store — Expo Go](https://apps.apple.com/app/expo-go/id982107779)
+
+### 2. Start the dev server on your computer
+
+The QR code appears **in the terminal**, not in Cursor or a browser tab.
+
 ```bash
 cd ml-agent-dashboard
 npm install
 npm start
 ```
 
-Scan the QR code with **Expo Go** on Android/iOS, or run:
+Wait until you see **“Metro waiting on…”** and a **square QR code made of text characters** in that same terminal window.
+
+If the QR looks cut off, widen the terminal or scroll up a few lines.
+
+### 3. Scan the QR code
+
+**Android**
+
+1. Open the **Expo Go** app.
+2. Tap **Scan QR code** on the home screen.
+3. Point your camera at the QR in the terminal.
+4. The ML Agent Dashboard should load.
+
+**iPhone**
+
+1. Open the **Camera** app (or Expo Go → Scan QR code).
+2. Point at the QR in the terminal.
+3. Tap the banner **“Open in Expo Go”**.
+
+### 4. If you still cannot see or scan the QR
+
+**Option A — same Wi‑Fi (easiest)**
+
+- Put phone and computer on the **same Wi‑Fi network**.
+- Run `npm start` (default LAN mode).
+
+**Option B — tunnel (different networks / VPN)**
 
 ```bash
-npm run android
-npm run ios
+npx expo start --tunnel
+```
+
+Use the new QR or copy the `exp://…` URL printed under the QR.
+
+**Option C — enter URL manually**
+
+1. In Expo Go, tap **Enter URL manually**.
+2. Paste the line that looks like: `exp://192.168.x.x:8081` or `exp://….exp.direct`
+
+### 5. Emulator alternative (no phone scan)
+
+```bash
+npm run android   # Android emulator
+npm run ios       # iOS simulator (macOS only)
 ```
 
 ## Architecture
