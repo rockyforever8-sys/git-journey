@@ -17,7 +17,41 @@ Built with **Expo (React Native)** for a single codebase, dark-minimal UI, syste
 - **PDF export** via share sheet
 - **Clickable citations** to approved public references
 
-## Quick start
+## Quick start (easy — minimal typing)
+
+**Tip:** You do not need to type commands by hand. **Copy → paste** into the terminal (Mac: `Cmd+V`, Windows: right-click → Paste).
+
+### Option A — One paste after you have the folder (easiest)
+
+**Mac / Linux:** double-click `start.sh`, or paste once in terminal:
+
+```bash
+bash start.sh
+```
+
+**Windows:** double-click `start.bat`
+
+That installs dependencies and starts Expo. The QR code appears in the terminal.
+
+### Option B — Get the project without `git clone` (browser only)
+
+1. Open: https://github.com/rockyforever8-sys/git-journey/tree/cursor/ml-agent-dashboard-c0cd
+2. Click green **Code** → **Download ZIP**
+3. Unzip the file (Downloads folder)
+4. Open the folder `git-journey-cursor-ml-agent-dashboard-c0cd/ml-agent-dashboard`
+5. **Mac:** drag the `ml-agent-dashboard` folder onto the Terminal icon, then type only: `bash start.sh`
+6. **Windows:** double-click `start.bat` inside `ml-agent-dashboard`
+
+### Option C — Cursor (click, almost no typing)
+
+1. In Cursor: **File → Clone Repository**
+2. Paste once: `https://github.com/rockyforever8-sys/git-journey.git`
+3. After clone: branch picker → `cursor/ml-agent-dashboard-c0cd`
+4. **File → Open Folder** → select `ml-agent-dashboard`
+5. **Terminal → New Terminal** (or `` Ctrl+` ``)
+6. Paste once: `bash start.sh`
+
+---
 
 ### 1. Install Expo Go on your phone
 
