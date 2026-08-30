@@ -356,6 +356,7 @@
         position: relative;
         --fold: rgba(201, 24, 74, 0.2);
         --ink-soft: #9a6078;
+        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.56) 0%, rgba(255, 232, 239, 0.6) 55%, rgba(255, 214, 224, 0.66) 100%);
       }
 
       .card-interior::after {
@@ -384,6 +385,7 @@
 
       .theme-party {
         --fold: rgba(201, 24, 74, 0.22);
+        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.56) 0%, rgba(255, 232, 239, 0.6) 55%, rgba(255, 214, 224, 0.66) 100%);
       }
 
       .theme-party .card-left {
@@ -392,6 +394,7 @@
 
       .theme-garden {
         --fold: rgba(123, 97, 255, 0.28);
+        --portrait-wash: linear-gradient(165deg, rgba(43, 18, 76, 0.58) 0%, rgba(82, 43, 91, 0.62) 45%, rgba(61, 28, 79, 0.7) 100%);
       }
 
       .theme-garden .card-left {
@@ -422,6 +425,7 @@
 
       .theme-carnival {
         --fold: rgba(0, 180, 216, 0.28);
+        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 176, 0.54) 0%, rgba(144, 224, 239, 0.58) 50%, rgba(72, 202, 228, 0.64) 100%);
       }
 
       .theme-carnival .card-left {
@@ -465,6 +469,32 @@
         gap: 4px;
         overflow: hidden;
         min-height: 380px;
+      }
+
+      .card-left::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: url("images/family-portrait.jpg") center 28% / cover no-repeat;
+        pointer-events: none;
+      }
+
+      .card-left::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: var(--portrait-wash);
+        pointer-events: none;
+      }
+
+      .card-left .balloon,
+      .card-left .deco-star,
+      .card-left .deco-moon,
+      .card-left .streamer,
+      .card-left .card-confetti {
+        z-index: 1;
       }
 
       .balloon {
@@ -543,7 +573,7 @@
 
       .card-left-content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -1142,6 +1172,42 @@
           </div>`;
       }
 
+      const FAMILY_PORTRAIT_SRC = "images/family-portrait.jpg";
+      let familyPortraitPromise = null;
+
+      function loadFamilyPortrait() {
+        if (!familyPortraitPromise) {
+          familyPortraitPromise = new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = FAMILY_PORTRAIT_SRC;
+          });
+        }
+        return familyPortraitPromise;
+      }
+
+      loadFamilyPortrait();
+
+      function drawCoverImage(ctx, img, x, y, w, h, focusY) {
+        const sourceW = img.naturalWidth || img.width;
+        const sourceH = img.naturalHeight || img.height;
+        if (!sourceW || !sourceH) {
+          return;
+        }
+        const scale = Math.max(w / sourceW, h / sourceH);
+        const dw = sourceW * scale;
+        const dh = sourceH * scale;
+        const dx = x + (w - dw) / 2;
+        const dy = y + (h - dh) * focusY;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        ctx.clip();
+        ctx.drawImage(img, dx, dy, dw, dh);
+        ctx.restore();
+      }
+
       function wrapCanvasText(ctx, text, maxWidth) {
         const words = text.split(/\s+/);
         const lines = [];
@@ -1311,7 +1377,7 @@
         drawBalloon(ctx, 90, height - 140, "#c9184a");
       }
 
-      function paintSavedCard(name, age, message, theme) {
+      async function paintSavedCard(name, age, message, theme) {
         const width = 1200;
         const leftW = 500;
         const pad = 48;
@@ -1377,6 +1443,27 @@
         leftGrad.addColorStop(1, p.left[2]);
         ctx.fillStyle = leftGrad;
         ctx.fillRect(0, 0, leftW, height);
+
+        const portrait = await loadFamilyPortrait();
+        if (portrait) {
+          drawCoverImage(ctx, portrait, 0, 0, leftW, height, 0.28);
+          const wash = ctx.createLinearGradient(0, 0, leftW, height);
+          if (theme.id === "garden") {
+            wash.addColorStop(0, "rgba(43, 18, 76, 0.58)");
+            wash.addColorStop(0.45, "rgba(82, 43, 91, 0.62)");
+            wash.addColorStop(1, "rgba(61, 28, 79, 0.7)");
+          } else if (theme.id === "carnival") {
+            wash.addColorStop(0, "rgba(255, 243, 176, 0.54)");
+            wash.addColorStop(0.5, "rgba(144, 224, 239, 0.58)");
+            wash.addColorStop(1, "rgba(72, 202, 228, 0.64)");
+          } else {
+            wash.addColorStop(0, "rgba(255, 243, 214, 0.56)");
+            wash.addColorStop(0.55, "rgba(255, 232, 239, 0.6)");
+            wash.addColorStop(1, "rgba(255, 214, 224, 0.66)");
+          }
+          ctx.fillStyle = wash;
+          ctx.fillRect(0, 0, leftW, height);
+        }
 
         ctx.fillStyle = p.right;
         ctx.fillRect(leftW, 0, width - leftW, height);
@@ -1494,7 +1581,7 @@
           await document.fonts.ready;
         }
 
-        const canvas = paintSavedCard(name, age, message, theme);
+        const canvas = await paintSavedCard(name, age, message, theme);
         return new Promise((resolve, reject) => {
           canvas.toBlob((blob) => {
             if (blob) resolve(blob);
