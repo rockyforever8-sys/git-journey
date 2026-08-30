@@ -244,16 +244,6 @@
         .layout {
           grid-template-columns: 1fr;
         }
-
-        .card-interior {
-          --portrait-strip: 112px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .card-interior {
-          --portrait-strip: 120px;
-        }
       }
 
       .panel {
@@ -376,7 +366,6 @@
         position: relative;
         --fold: rgba(201, 24, 74, 0.2);
         --ink-soft: #9a6078;
-        --portrait-strip: 132px;
       }
 
       .card-interior::after {
@@ -393,13 +382,13 @@
       .card-interior::before {
         content: "";
         position: absolute;
-        top: var(--portrait-strip);
+        top: 0;
         bottom: 0;
         left: 34%;
         width: 2px;
         background: linear-gradient(to bottom, transparent, var(--fold) 15%, var(--fold) 85%, transparent);
         transform: translateX(-50%);
-        z-index: 2;
+        z-index: 0;
         pointer-events: none;
       }
 
@@ -493,8 +482,10 @@
 
       .card-portrait-strip {
         grid-area: photo;
-        height: var(--portrait-strip);
-        background: url("images/family-portrait.jpg") center top / cover no-repeat;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1080 / 622;
+        background: url("images/family-portrait.jpg") center / 100% 100% no-repeat;
         box-shadow: inset 0 -2px 0 rgba(212, 175, 55, 0.45);
         z-index: 1;
       }
@@ -746,7 +737,6 @@
             "photo"
             "note"
             "deco";
-          --portrait-strip: 120px;
         }
 
         .card-interior::before {
@@ -1237,25 +1227,6 @@
 
       loadFamilyPortrait();
 
-      function drawCoverImage(ctx, img, x, y, w, h, focusY) {
-        const sourceW = img.naturalWidth || img.width;
-        const sourceH = img.naturalHeight || img.height;
-        if (!sourceW || !sourceH) {
-          return;
-        }
-        const scale = Math.max(w / sourceW, h / sourceH);
-        const dw = sourceW * scale;
-        const dh = sourceH * scale;
-        const dx = x + (w - dw) / 2;
-        const dy = y + (h - dh) * focusY;
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(x, y, w, h);
-        ctx.clip();
-        ctx.drawImage(img, dx, dy, dw, dh);
-        ctx.restore();
-      }
-
       function wrapCanvasText(ctx, text, maxWidth) {
         const lines = [];
 
@@ -1394,22 +1365,26 @@
         ctx.restore();
       }
 
-      function paintThemeDecor(ctx, themeId, leftW, height) {
+      function paintThemeDecor(ctx, themeId, leftW, height, originY) {
+        const y0 = originY;
         if (themeId === "garden") {
           ctx.fillStyle = "#ffe566";
           ctx.beginPath();
-          ctx.arc(leftW - 70, 70, 22, 0, Math.PI * 2);
+          ctx.arc(leftW - 70, y0 + 70, 22, 0, Math.PI * 2);
           ctx.fill();
           ctx.fillStyle = "#2b124c";
           ctx.beginPath();
-          ctx.arc(leftW - 58, 64, 20, 0, Math.PI * 2);
+          ctx.arc(leftW - 58, y0 + 64, 20, 0, Math.PI * 2);
           ctx.fill();
           const stars = [
             [50, 50], [140, 90], [230, 40], [80, 200], [360, 120],
             [40, 340], [400, 280], [180, 420], [320, 500], [90, 580],
           ];
           for (const [sx, sy] of stars) {
-            drawStar(ctx, sx, sy, 8 + (sx % 5), "#ffe566");
+            const yy = y0 + sy;
+            if (yy < height - 24) {
+              drawStar(ctx, sx, yy, 8 + (sx % 5), "#ffe566");
+            }
           }
           return;
         }
@@ -1420,17 +1395,17 @@
           ];
           for (const [sx, color] of streamers) {
             ctx.fillStyle = color;
-            drawRoundRect(ctx, sx, 0, 14, 90, 8);
+            drawRoundRect(ctx, sx, y0, 14, 90, 8);
             ctx.fill();
           }
-          drawBalloon(ctx, 80, 140, "#00b4d8");
-          drawBalloon(ctx, 410, 110, "#ff9f1c");
+          drawBalloon(ctx, 80, y0 + 140, "#00b4d8");
+          drawBalloon(ctx, 410, y0 + 110, "#ff9f1c");
           drawBalloon(ctx, 120, height - 150, "#ffb703");
           return;
         }
 
-        drawBalloon(ctx, 70, 90, "#ff4d6d");
-        drawBalloon(ctx, 420, 80, "#ffb703");
+        drawBalloon(ctx, 70, y0 + 90, "#ff4d6d");
+        drawBalloon(ctx, 420, y0 + 80, "#ffb703");
         drawBalloon(ctx, 90, height - 140, "#c9184a");
       }
 
@@ -1443,9 +1418,13 @@
         const greeting = `Dear ${name},`;
         const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
         const sign = theme.sign;
-        const stripH = 250;
+        const portrait = await loadFamilyPortrait();
+        const sourceW = portrait?.naturalWidth || 1080;
+        const sourceH = portrait?.naturalHeight || 622;
+        const stripH = Math.round(width * sourceH / sourceW);
+        const panelH = 440;
         const textHeight = stripH + 50 + bodyLines.length * 40 + 70;
-        const height = Math.max(800, textHeight + 80);
+        const height = Math.max(stripH + panelH, textHeight + 80);
 
         const canvas = document.createElement("canvas");
         canvas.width = width;
@@ -1505,11 +1484,10 @@
         ctx.fillStyle = p.right;
         ctx.fillRect(leftW, 0, width - leftW, height);
 
-        const portrait = await loadFamilyPortrait();
         if (portrait) {
-          drawCoverImage(ctx, portrait, 0, 0, width, stripH, 0);
-          ctx.fillStyle = "rgba(212, 175, 55, 0.45)";
-          ctx.fillRect(0, stripH - 2, width, 2);
+          ctx.drawImage(portrait, 0, 0, width, stripH);
+          ctx.fillStyle = "rgba(212, 175, 55, 0.55)";
+          ctx.fillRect(0, stripH - 3, width, 3);
         }
 
         const confetti = [
@@ -1518,15 +1496,19 @@
           [430, 560], [30, 600], [150, 640], [380, 640], [280, 200], [420, 180],
         ];
         confetti.forEach(([cx, cy], i) => {
+          const y = stripH + 20 + cy * 0.45;
+          if (y >= height - 24) {
+            return;
+          }
           ctx.save();
-          ctx.translate(cx, cy);
+          ctx.translate(cx, y);
           ctx.rotate(0.4 + i * 0.2);
           ctx.fillStyle = p.confetti[i % p.confetti.length];
           ctx.fillRect(-6, -6, 12, 12);
           ctx.restore();
         });
 
-        paintThemeDecor(ctx, theme.id, leftW, height);
+        paintThemeDecor(ctx, theme.id, leftW, height, stripH);
 
         ctx.fillStyle = p.banner;
         drawRoundRect(ctx, leftW / 2 - 100, stripH + 24, 200, 36, 18);
@@ -1541,16 +1523,16 @@
         ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, stripH + 78);
 
         if (theme.id === "garden") {
-          drawRoseBloom(ctx, leftW / 2 - 40, 430);
-          drawRoseBloom(ctx, leftW / 2 + 40, 450);
+          drawRoseBloom(ctx, leftW / 2 - 40, stripH + 170);
+          drawRoseBloom(ctx, leftW / 2 + 40, stripH + 190);
         } else {
-          drawCake(ctx, leftW / 2, 420);
+          drawCake(ctx, leftW / 2, stripH + 180);
           if (theme.id === "party") {
-            drawRoseBloom(ctx, leftW / 2 + 90, 450);
+            drawRoseBloom(ctx, leftW / 2 + 90, stripH + 210);
           }
         }
 
-        const badgeY = 580;
+        const badgeY = stripH + 330;
         const badgeGrad = ctx.createLinearGradient(leftW / 2 - 80, badgeY, leftW / 2 + 80, badgeY + 80);
         badgeGrad.addColorStop(0, p.badge[0]);
         badgeGrad.addColorStop(1, p.badge[1]);
@@ -1566,7 +1548,7 @@
         ctx.strokeStyle = p.fold;
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(leftW, 0);
+        ctx.moveTo(leftW, stripH);
         ctx.lineTo(leftW, height);
         ctx.stroke();
 
