@@ -7,9 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
       :root {
         --pink: #ff6b9d;
@@ -62,6 +63,39 @@
         }
       }
 
+      @keyframes bounce-in {
+        0% {
+          opacity: 0;
+          transform: translateY(-16px) scale(0.96);
+        }
+        70% {
+          transform: translateY(4px) scale(1.01);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes wiggle {
+        0%,
+        100% {
+          transform: rotate(-2deg);
+        }
+        50% {
+          transform: rotate(2deg);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 200% 50%;
+        }
+      }
+
       .page {
         position: relative;
         z-index: 1;
@@ -75,17 +109,33 @@
         margin-bottom: 36px;
       }
 
-      .title-badge {
-        display: inline-block;
-        background: linear-gradient(90deg, var(--pink), var(--purple), var(--teal));
+      .title-emoji {
+        display: block;
+        font-size: 2.4rem;
+        margin-bottom: 4px;
+        animation: wiggle 2.5s ease-in-out infinite;
+      }
+
+      .fun-title {
+        font-family: "Pacifico", cursive;
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        font-weight: 400;
+        margin: 0 0 10px;
+        line-height: 1.15;
+        background: linear-gradient(
+          90deg,
+          var(--pink),
+          var(--gold),
+          var(--purple),
+          var(--teal),
+          var(--pink)
+        );
+        background-size: 200% auto;
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        font-size: clamp(2.2rem, 5vw, 3.4rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin: 0 0 8px;
-        line-height: 1.1;
+        animation: shimmer 4s linear infinite;
+        filter: drop-shadow(0 2px 8px rgba(155, 93, 229, 0.25));
       }
 
       .subtitle {
@@ -168,20 +218,29 @@
         transition: transform 0.15s, box-shadow 0.15s;
       }
 
-      button:hover {
+      button:hover:not(:disabled) {
         transform: translateY(-2px);
         box-shadow: 0 12px 28px rgba(155, 93, 229, 0.45);
       }
 
-      button:active {
+      button:active:not(:disabled) {
         transform: translateY(0);
+      }
+
+      .cards-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .card-item {
+        animation: bounce-in 0.45s ease-out;
       }
 
       .card-stage {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 420px;
         padding: 12px;
       }
 
@@ -189,7 +248,6 @@
         width: 100%;
         max-width: 480px;
         aspect-ratio: 4 / 3;
-        perspective: 1200px;
       }
 
       .card-interior {
@@ -291,7 +349,7 @@
         line-height: 1.55;
         color: var(--ink);
         margin: 0 0 20px;
-        min-height: 120px;
+        min-height: 100px;
       }
 
       .card-right .signature {
@@ -300,11 +358,6 @@
         color: #7a6b88;
         margin: 0;
         text-align: right;
-      }
-
-      .placeholder-text {
-        color: #b5a8c0;
-        font-style: italic;
       }
 
       .card-ribbon {
@@ -324,7 +377,7 @@
       }
 
       .copy-btn {
-        margin-top: 16px;
+        margin-top: 12px;
         background: linear-gradient(135deg, var(--teal), #00a896);
         box-shadow: 0 8px 24px rgba(0, 187, 249, 0.3);
         font-size: 0.95rem;
@@ -332,9 +385,22 @@
       }
 
       .copy-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+        opacity: 0.6;
+        cursor: wait;
         transform: none;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        color: #9a8aa8;
+        font-weight: 600;
+        line-height: 1.6;
+      }
+
+      .empty-state .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 12px;
       }
 
       .toast {
@@ -365,8 +431,9 @@
 
     <div class="page">
       <header>
-        <h1 class="title-badge">Birthday Card Writer</h1>
-        <p class="subtitle">Turn name, age &amp; hobby into a hilariously heartfelt card message</p>
+        <span class="title-emoji" aria-hidden="true">🎈🎂✨</span>
+        <h1 class="fun-title">Wit &amp; Wishes Card Factory</h1>
+        <p class="subtitle">Turn name, age &amp; hobby into hilariously heartfelt birthday cards</p>
       </header>
 
       <div class="layout">
@@ -390,32 +457,17 @@
         </section>
 
         <section class="panel">
-          <h2>Your card</h2>
-          <div class="card-stage">
-            <div class="birthday-card">
-              <div class="card-interior">
-                <span class="card-ribbon">Happy Birthday!</span>
-                <div class="card-left">
-                  <div class="balloons" aria-hidden="true">🎈🎂🎉</div>
-                  <p class="age-display" id="card-age">?</p>
-                  <p class="age-label">years young</p>
-                </div>
-                <div class="card-right">
-                  <p class="greeting" id="card-greeting">Dear friend,</p>
-                  <p class="message placeholder-text" id="card-message">
-                    Fill in the details on the left and hit Generate to see your funny birthday message here!
-                  </p>
-                  <p class="signature">With love &amp; laughter ✨</p>
-                </div>
-              </div>
-            </div>
+          <h2>Your cards</h2>
+          <div id="empty-state" class="empty-state">
+            <div class="empty-icon" aria-hidden="true">💌</div>
+            <p>Fill in the details and hit Generate — your cards will stack up here!</p>
           </div>
-          <button type="button" class="copy-btn" id="copy-btn" disabled>Copy message</button>
+          <div id="cards-stack" class="cards-stack" hidden></div>
         </section>
       </div>
     </div>
 
-    <div class="toast" id="toast" role="status">Message copied!</div>
+    <div class="toast" id="toast" role="status">Card copied!</div>
 
     <script>
       const colors = ["#ff6b9d", "#ffd166", "#9b5de5", "#00bbf9", "#ff8c69", "#06d6a0"];
@@ -452,7 +504,7 @@
       ];
 
       function generateMessage(name, age, hobby) {
-        const idx = Math.abs(hashCode(name + age + hobby)) % templates.length;
+        const idx = Math.abs(hashCode(name + age + hobby + Date.now())) % templates.length;
         return templates[idx](name, age, hobby);
       }
 
@@ -465,14 +517,127 @@
         return hash;
       }
 
-      const form = document.getElementById("card-form");
-      const cardAge = document.getElementById("card-age");
-      const cardGreeting = document.getElementById("card-greeting");
-      const cardMessage = document.getElementById("card-message");
-      const copyBtn = document.getElementById("copy-btn");
-      const toast = document.getElementById("toast");
+      function formatCardText(name, age, message) {
+        return [
+          "🎂 Happy Birthday! 🎂",
+          "",
+          `Dear ${name},`,
+          "",
+          message,
+          "",
+          `${age} years young!`,
+          "",
+          "With love & laughter ✨",
+        ].join("\n");
+      }
 
-      let currentMessage = "";
+      function createCardElement(name, age, message) {
+        const item = document.createElement("article");
+        item.className = "card-item";
+
+        item.innerHTML = `
+          <div class="card-stage">
+            <div class="birthday-card">
+              <div class="card-interior">
+                <span class="card-ribbon">Happy Birthday!</span>
+                <div class="card-left">
+                  <div class="balloons" aria-hidden="true">🎈🎂🎉</div>
+                  <p class="age-display">${age}</p>
+                  <p class="age-label">years young</p>
+                </div>
+                <div class="card-right">
+                  <p class="greeting">Dear ${escapeHtml(name)},</p>
+                  <p class="message">${escapeHtml(message)}</p>
+                  <p class="signature">With love &amp; laughter ✨</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="copy-btn">Copy card &amp; message</button>
+        `;
+
+        const copyBtn = item.querySelector(".copy-btn");
+        copyBtn.addEventListener("click", () => copyCard(item, name, age, message, copyBtn));
+
+        return item;
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      async function copyCard(item, name, age, message, button) {
+        const cardInterior = item.querySelector(".card-interior");
+        const text = formatCardText(name, age, message);
+
+        button.disabled = true;
+        button.textContent = "Copying…";
+
+        try {
+          const canvas = await html2canvas(cardInterior, {
+            backgroundColor: "#fffdf7",
+            scale: 2,
+            useCORS: true,
+            logging: false,
+          });
+
+          const imageBlob = await new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error("Failed to create image"));
+            }, "image/png");
+          });
+
+          const textBlob = new Blob([text], { type: "text/plain" });
+
+          if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
+            try {
+              await navigator.clipboard.write([
+                new ClipboardItem({
+                  "text/plain": textBlob,
+                  "image/png": imageBlob,
+                }),
+              ]);
+              showToast("Card image & message copied!");
+              return;
+            } catch {
+              // Fall through to image-only or text-only copy
+            }
+          }
+
+          if (navigator.clipboard?.write) {
+            await navigator.clipboard.write([new ClipboardItem({ "image/png": imageBlob })]);
+            showToast("Card image copied! (Paste into Messages, Notes, etc.)");
+            return;
+          }
+
+          await navigator.clipboard.writeText(text);
+          showToast("Message copied! (Image copy not supported in this browser)");
+        } catch {
+          try {
+            await navigator.clipboard.writeText(text);
+            showToast("Message copied! (Could not copy image)");
+          } catch {
+            showToast("Could not copy — try selecting manually");
+          }
+        } finally {
+          button.disabled = false;
+          button.textContent = "Copy card & message";
+        }
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2500);
+      }
+
+      const form = document.getElementById("card-form");
+      const cardsStack = document.getElementById("cards-stack");
+      const emptyState = document.getElementById("empty-state");
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -482,29 +647,12 @@
 
         if (!name || !hobby || !age) return;
 
-        currentMessage = generateMessage(name, age, hobby);
+        const message = generateMessage(name, age, hobby);
+        const card = createCardElement(name, age, message);
 
-        cardAge.textContent = age;
-        cardGreeting.textContent = `Dear ${name},`;
-        cardMessage.textContent = currentMessage;
-        cardMessage.classList.remove("placeholder-text");
-        copyBtn.disabled = false;
-      });
-
-      copyBtn.addEventListener("click", async () => {
-        if (!currentMessage) return;
-        try {
-          await navigator.clipboard.writeText(currentMessage);
-          toast.classList.add("show");
-          setTimeout(() => toast.classList.remove("show"), 2000);
-        } catch {
-          toast.textContent = "Could not copy — select the text manually";
-          toast.classList.add("show");
-          setTimeout(() => {
-            toast.classList.remove("show");
-            toast.textContent = "Message copied!";
-          }, 2500);
-        }
+        emptyState.hidden = true;
+        cardsStack.hidden = false;
+        cardsStack.prepend(card);
       });
     </script>
   </body>
