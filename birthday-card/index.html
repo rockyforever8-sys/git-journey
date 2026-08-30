@@ -35,26 +35,31 @@
         overflow-x: hidden;
       }
 
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        background:
-          url("images/family-portrait.jpg") center 28% / cover no-repeat;
-        filter: saturate(0.85) brightness(0.92);
-      }
-
       body::after {
         content: "";
         position: fixed;
         inset: 0;
         z-index: 0;
         background:
-          radial-gradient(circle at 12% 18%, rgba(255, 77, 109, 0.12), transparent 32%),
-          radial-gradient(circle at 88% 80%, rgba(255, 183, 3, 0.1), transparent 28%),
-          linear-gradient(160deg, rgba(255, 240, 243, 0.78) 0%, rgba(255, 248, 240, 0.74) 42%, rgba(255, 229, 236, 0.8) 100%);
+          radial-gradient(circle at 12% 18%, rgba(255, 77, 109, 0.1), transparent 32%),
+          radial-gradient(circle at 88% 80%, rgba(255, 183, 3, 0.08), transparent 28%);
         pointer-events: none;
+      }
+
+      .page-portrait {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        line-height: 0;
+        box-shadow: 0 10px 28px rgba(74, 25, 66, 0.18);
+      }
+
+      .page-portrait img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        object-position: center top;
       }
 
       .confetti,
@@ -223,8 +228,9 @@
       .subtitle {
         margin: 0;
         font-size: 1.05rem;
-        color: #8b5a7a;
+        color: #5c3d4a;
         font-weight: 600;
+        text-shadow: 0 1px 0 #fff, 0 0 12px rgba(255, 255, 255, 0.95);
       }
 
       .layout {
@@ -237,6 +243,10 @@
       @media (max-width: 860px) {
         .layout {
           grid-template-columns: 1fr;
+        }
+
+        .card-interior {
+          --portrait-strip: 112px;
         }
       }
 
@@ -345,6 +355,7 @@
         min-height: 380px;
         display: grid;
         grid-template-columns: 42% 1fr;
+        grid-template-rows: auto 1fr;
         border-radius: 14px;
         overflow: hidden;
         box-shadow:
@@ -356,6 +367,7 @@
         position: relative;
         --fold: rgba(201, 24, 74, 0.2);
         --ink-soft: #9a6078;
+        --portrait-strip: 132px;
       }
 
       .card-interior::after {
@@ -372,7 +384,7 @@
       .card-interior::before {
         content: "";
         position: absolute;
-        top: 0;
+        top: var(--portrait-strip);
         bottom: 0;
         left: 42%;
         width: 2px;
@@ -404,6 +416,7 @@
 
       .theme-garden .vibe-text {
         color: #e0aaff;
+        text-shadow: 0 1px 3px rgba(43, 18, 76, 0.7);
       }
 
       .theme-garden .age-badge {
@@ -454,6 +467,7 @@
       .card-right {
         padding: 20px 18px;
         position: relative;
+        grid-row: 2;
       }
 
       .card-left {
@@ -465,6 +479,22 @@
         gap: 4px;
         overflow: hidden;
         min-height: 380px;
+      }
+
+      .card-portrait-strip {
+        grid-column: 1 / -1;
+        height: var(--portrait-strip);
+        background: url("images/family-portrait.jpg") center top / cover no-repeat;
+        box-shadow: inset 0 -2px 0 rgba(212, 175, 55, 0.45);
+        z-index: 1;
+      }
+
+      .card-left .balloon,
+      .card-left .deco-star,
+      .card-left .deco-moon,
+      .card-left .streamer,
+      .card-left .card-confetti {
+        z-index: 1;
       }
 
       .balloon {
@@ -543,7 +573,7 @@
 
       .card-left-content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -610,6 +640,7 @@
         letter-spacing: 0.22em;
         text-transform: uppercase;
         color: #c9184a;
+        text-shadow: 0 1px 2px rgba(255, 253, 249, 0.85);
       }
 
       .card-left .age-badge {
@@ -791,6 +822,10 @@
   <body>
     <div class="confetti" aria-hidden="true" id="confetti"></div>
     <div class="burst-confetti" aria-hidden="true" id="burst-confetti"></div>
+
+    <div class="page-portrait">
+      <img src="images/family-portrait.jpg" alt="Family portrait" />
+    </div>
 
     <div class="page">
       <header>
@@ -1142,6 +1177,42 @@
           </div>`;
       }
 
+      const FAMILY_PORTRAIT_SRC = "images/family-portrait.jpg";
+      let familyPortraitPromise = null;
+
+      function loadFamilyPortrait() {
+        if (!familyPortraitPromise) {
+          familyPortraitPromise = new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = FAMILY_PORTRAIT_SRC;
+          });
+        }
+        return familyPortraitPromise;
+      }
+
+      loadFamilyPortrait();
+
+      function drawCoverImage(ctx, img, x, y, w, h, focusY) {
+        const sourceW = img.naturalWidth || img.width;
+        const sourceH = img.naturalHeight || img.height;
+        if (!sourceW || !sourceH) {
+          return;
+        }
+        const scale = Math.max(w / sourceW, h / sourceH);
+        const dw = sourceW * scale;
+        const dh = sourceH * scale;
+        const dx = x + (w - dw) / 2;
+        const dy = y + (h - dh) * focusY;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        ctx.clip();
+        ctx.drawImage(img, dx, dy, dw, dh);
+        ctx.restore();
+      }
+
       function wrapCanvasText(ctx, text, maxWidth) {
         const words = text.split(/\s+/);
         const lines = [];
@@ -1311,7 +1382,7 @@
         drawBalloon(ctx, 90, height - 140, "#c9184a");
       }
 
-      function paintSavedCard(name, age, message, theme) {
+      async function paintSavedCard(name, age, message, theme) {
         const width = 1200;
         const leftW = 500;
         const pad = 48;
@@ -1320,8 +1391,9 @@
         const greeting = `Dear ${name},`;
         const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
         const sign = theme.sign;
-        const textHeight = 70 + bodyLines.length * 44 + 70;
-        const height = Math.max(720, textHeight + 80);
+        const stripH = 250;
+        const textHeight = stripH + 50 + bodyLines.length * 44 + 70;
+        const height = Math.max(800, textHeight + 80);
 
         const canvas = document.createElement("canvas");
         canvas.width = width;
@@ -1381,6 +1453,13 @@
         ctx.fillStyle = p.right;
         ctx.fillRect(leftW, 0, width - leftW, height);
 
+        const portrait = await loadFamilyPortrait();
+        if (portrait) {
+          drawCoverImage(ctx, portrait, 0, 0, width, stripH, 0);
+          ctx.fillStyle = "rgba(212, 175, 55, 0.45)";
+          ctx.fillRect(0, stripH - 2, width, 2);
+        }
+
         const confetti = [
           [40, 40], [120, 90], [220, 50], [80, 180], [300, 140], [360, 80],
           [60, 320], [400, 260], [180, 280], [90, 480], [340, 420], [250, 520],
@@ -1398,28 +1477,28 @@
         paintThemeDecor(ctx, theme.id, leftW, height);
 
         ctx.fillStyle = p.banner;
-        drawRoundRect(ctx, leftW / 2 - 100, 70, 200, 36, 18);
+        drawRoundRect(ctx, leftW / 2 - 100, stripH + 24, 200, 36, 18);
         ctx.fill();
         ctx.fillStyle = "#fff";
         ctx.font = "800 18px Nunito, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(theme.banner.toUpperCase(), leftW / 2, 94);
+        ctx.fillText(theme.banner.toUpperCase(), leftW / 2, stripH + 48);
 
         ctx.fillStyle = p.vibe;
         ctx.font = "800 16px Nunito, sans-serif";
-        ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, 130);
+        ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, stripH + 78);
 
         if (theme.id === "garden") {
-          drawRoseBloom(ctx, leftW / 2 - 40, 230);
-          drawRoseBloom(ctx, leftW / 2 + 40, 250);
+          drawRoseBloom(ctx, leftW / 2 - 40, 430);
+          drawRoseBloom(ctx, leftW / 2 + 40, 450);
         } else {
-          drawCake(ctx, leftW / 2, 210);
+          drawCake(ctx, leftW / 2, 420);
           if (theme.id === "party") {
-            drawRoseBloom(ctx, leftW / 2 + 90, 250);
+            drawRoseBloom(ctx, leftW / 2 + 90, 450);
           }
         }
 
-        const badgeY = 430;
+        const badgeY = 580;
         const badgeGrad = ctx.createLinearGradient(leftW / 2 - 80, badgeY, leftW / 2 + 80, badgeY + 80);
         badgeGrad.addColorStop(0, p.badge[0]);
         badgeGrad.addColorStop(1, p.badge[1]);
@@ -1449,7 +1528,7 @@
         ctx.font = "800 15px Nunito, sans-serif";
         ctx.fillText(theme.ribbon.toUpperCase(), width - 180, 30);
 
-        let ty = 90;
+        let ty = stripH + 56;
         ctx.textAlign = "left";
         ctx.fillStyle = p.greet;
         ctx.font = "700 42px Caveat, cursive, sans-serif";
@@ -1494,7 +1573,7 @@
           await document.fonts.ready;
         }
 
-        const canvas = paintSavedCard(name, age, message, theme);
+        const canvas = await paintSavedCard(name, age, message, theme);
         return new Promise((resolve, reject) => {
           canvas.toBlob((blob) => {
             if (blob) resolve(blob);
@@ -1511,6 +1590,7 @@
           <div class="card-stage">
             <div class="birthday-card">
               <div class="card-interior theme-${theme.id}">
+                <div class="card-portrait-strip" role="img" aria-label="Family portrait"></div>
                 <span class="flourish tl" aria-hidden="true"></span>
                 <span class="flourish tr" aria-hidden="true"></span>
                 <span class="flourish bl" aria-hidden="true"></span>
