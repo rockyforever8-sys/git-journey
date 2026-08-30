@@ -125,22 +125,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20px;
+        gap: 16px;
         margin-bottom: 12px;
-      }
-
-      .hero-images img {
-        width: 72px;
-        height: 72px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 8px 24px var(--shadow);
-        animation: float 3s ease-in-out infinite;
-      }
-
-      .hero-images img:last-child {
-        animation-delay: 1.5s;
+        font-size: 2.6rem;
+        line-height: 1;
+        animation: wiggle 2.8s ease-in-out infinite;
       }
 
       .fun-title {
@@ -275,8 +264,8 @@
 
       .birthday-card {
         width: 100%;
-        max-width: 480px;
-        aspect-ratio: 4 / 3;
+        max-width: 520px;
+        aspect-ratio: 16 / 11;
       }
 
       .card-interior {
@@ -321,49 +310,96 @@
 
       .card-left {
         background:
-          radial-gradient(circle at 30% 20%, rgba(255, 183, 3, 0.2), transparent 50%),
-          radial-gradient(circle at 70% 80%, rgba(201, 24, 74, 0.12), transparent 45%),
-          var(--cream);
+          radial-gradient(circle at 18% 22%, #ffe27a 0 7px, transparent 8px),
+          radial-gradient(circle at 82% 18%, #ff8fab 0 6px, transparent 7px),
+          radial-gradient(circle at 12% 78%, #ff4d6d 0 5px, transparent 6px),
+          radial-gradient(circle at 88% 72%, #ffd166 0 6px, transparent 7px),
+          radial-gradient(circle at 50% 8%, #c9184a 0 4px, transparent 5px),
+          radial-gradient(circle at 70% 90%, #fb8500 0 5px, transparent 6px),
+          radial-gradient(circle at 30% 48%, rgba(255, 183, 3, 0.35), transparent 40%),
+          radial-gradient(circle at 72% 62%, rgba(201, 24, 74, 0.18), transparent 42%),
+          linear-gradient(165deg, #fff3d6 0%, #ffe8ef 55%, #ffd6e0 100%);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-right: 1px solid rgba(201, 24, 74, 0.15);
-        gap: 8px;
+        gap: 6px;
+        overflow: hidden;
       }
 
-      .card-photos {
+      .card-left .corner-emoji {
+        position: absolute;
+        font-size: 1.35rem;
+        line-height: 1;
+        z-index: 1;
+      }
+
+      .card-left .corner-emoji.tl { top: 10px; left: 10px; }
+      .card-left .corner-emoji.tr { top: 12px; right: 12px; }
+      .card-left .corner-emoji.bl { bottom: 10px; left: 12px; }
+      .card-left .corner-emoji.br { bottom: 12px; right: 10px; }
+
+      .card-left .art-row {
         display: flex;
-        gap: 10px;
-        align-items: center;
+        align-items: flex-end;
         justify-content: center;
+        gap: 10px;
+        margin-bottom: 2px;
       }
 
-      .card-photos img {
-        width: 64px;
-        height: 64px;
-        object-fit: cover;
-        border-radius: 12px;
-        border: 2px solid #fff;
-        box-shadow: 0 4px 12px rgba(74, 25, 66, 0.15);
+      .card-left .emoji-art {
+        font-size: 3.2rem;
+        line-height: 1;
+        filter: drop-shadow(0 3px 4px rgba(74, 25, 66, 0.18));
+      }
+
+      .card-left .sparkle-row {
+        font-size: 1.05rem;
+        letter-spacing: 0.18em;
+        line-height: 1;
+        margin: 0 0 4px;
+      }
+
+      .card-left .party-banner {
+        margin: 0 0 4px;
+        padding: 3px 12px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ffb703, #fb8500);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: 0 3px 8px rgba(251, 133, 0, 0.35);
+      }
+
+      .card-left .age-badge {
+        min-width: 88px;
+        padding: 8px 14px 6px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #c9184a, #ff4d6d);
+        color: #fff;
+        text-align: center;
+        box-shadow: 0 6px 14px rgba(201, 24, 74, 0.35);
       }
 
       .card-left .age-display {
         font-family: "Caveat", cursive;
-        font-size: 2.6rem;
+        font-size: 2.3rem;
         font-weight: 700;
-        color: var(--rose);
-        margin: 4px 0 0;
-        line-height: 1;
+        color: #fff;
+        margin: 0;
+        line-height: 0.9;
       }
 
       .card-left .age-label {
-        font-size: 0.8rem;
-        font-weight: 700;
+        font-size: 0.68rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: #b07a8f;
-        margin: 0;
+        letter-spacing: 0.1em;
+        color: #ffe8ef;
+        margin: 2px 0 0;
       }
 
       .card-right {
@@ -454,19 +490,9 @@
       }
 
       .empty-state .empty-icon {
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
-
-      .empty-state .empty-icon img {
-        width: 56px;
-        height: 56px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 2px solid #fff;
-        box-shadow: 0 6px 16px var(--shadow);
+        font-size: 2.6rem;
+        margin-bottom: 12px;
+        letter-spacing: 0.12em;
       }
 
       .toast {
@@ -499,22 +525,7 @@
 
     <div class="page">
       <header>
-        <div class="hero-images" aria-hidden="true">
-          <img
-            src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&h=200&fit=crop&q=80"
-            alt=""
-            width="72"
-            height="72"
-            crossorigin="anonymous"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop&q=80"
-            alt=""
-            width="72"
-            height="72"
-            crossorigin="anonymous"
-          />
-        </div>
+        <div class="hero-images" aria-hidden="true">🎂 🌹 🎈</div>
         <h1 class="fun-title">Wit &amp; Wishes Card Factory</h1>
         <p class="subtitle">Cake, roses &amp; laughs — birthday cards with serious good vibes</p>
       </header>
@@ -543,22 +554,7 @@
         <section class="panel">
           <h2>Your cards</h2>
           <div id="empty-state" class="empty-state">
-            <div class="empty-icon" aria-hidden="true">
-              <img
-                src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=120&h=120&fit=crop&q=80"
-                alt=""
-                width="56"
-                height="56"
-                crossorigin="anonymous"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=120&h=120&fit=crop&q=80"
-                alt=""
-                width="56"
-                height="56"
-                crossorigin="anonymous"
-              />
-            </div>
+            <div class="empty-icon" aria-hidden="true">🎂 🌹 ✨</div>
             <p>Fill in the details and hit Generate — your cards will stack up here!</p>
           </div>
           <div id="cards-stack" class="cards-stack" hidden></div>
@@ -569,11 +565,6 @@
     <div class="toast" id="toast" role="status">Card saved!</div>
 
     <script>
-      const CAKE_IMG =
-        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&h=200&fit=crop&q=80";
-      const ROSE_IMG =
-        "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop&q=80";
-
       const colors = ["#ff4d6d", "#ffb703", "#c9184a", "#fb8500", "#e07a5f", "#2a9d8f"];
       const confettiEl = document.getElementById("confetti");
 
@@ -670,6 +661,10 @@
       }
 
       async function renderCardImage(cardInterior) {
+        if (document.fonts?.ready) {
+          await document.fonts.ready;
+        }
+
         const canvas = await html2canvas(cardInterior, {
           backgroundColor: "#fffdf9",
           scale: 2,
@@ -704,12 +699,20 @@
               <div class="card-interior">
                 <span class="card-ribbon">Happy Birthday!</span>
                 <div class="card-left">
-                  <div class="card-photos" aria-hidden="true">
-                    <img src="${CAKE_IMG}" alt="" width="64" height="64" crossorigin="anonymous" />
-                    <img src="${ROSE_IMG}" alt="" width="64" height="64" crossorigin="anonymous" />
+                  <span class="corner-emoji tl" aria-hidden="true">🎈</span>
+                  <span class="corner-emoji tr" aria-hidden="true">🎉</span>
+                  <span class="corner-emoji bl" aria-hidden="true">✨</span>
+                  <span class="corner-emoji br" aria-hidden="true">🎁</span>
+                  <p class="party-banner">Party time</p>
+                  <p class="sparkle-row" aria-hidden="true">✨ 💫 ✨</p>
+                  <div class="art-row" aria-hidden="true">
+                    <span class="emoji-art">🎂</span>
+                    <span class="emoji-art">🌹</span>
                   </div>
-                  <p class="age-display">${age}</p>
-                  <p class="age-label">years young</p>
+                  <div class="age-badge">
+                    <p class="age-display">${age}</p>
+                    <p class="age-label">years young</p>
+                  </div>
                 </div>
                 <div class="card-right">
                   <p class="greeting">Dear ${escapeHtml(name)},</p>
