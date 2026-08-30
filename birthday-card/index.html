@@ -279,6 +279,8 @@
           inset 0 0 0 1px rgba(255, 255, 255, 0.7);
         background: var(--paper);
         position: relative;
+        --fold: rgba(201, 24, 74, 0.2);
+        --ink-soft: #9a6078;
       }
 
       .card-interior::before {
@@ -286,18 +288,80 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        left: 50%;
+        left: 42%;
         width: 2px;
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          rgba(201, 24, 74, 0.2) 15%,
-          rgba(201, 24, 74, 0.2) 85%,
-          transparent
-        );
+        background: linear-gradient(to bottom, transparent, var(--fold) 15%, var(--fold) 85%, transparent);
         transform: translateX(-50%);
         z-index: 2;
         pointer-events: none;
+      }
+
+      .theme-party {
+        --fold: rgba(201, 24, 74, 0.22);
+      }
+
+      .theme-party .card-left {
+        background: linear-gradient(165deg, #fff3d6 0%, #ffe8ef 55%, #ffd6e0 100%);
+      }
+
+      .theme-garden {
+        --fold: rgba(123, 97, 255, 0.28);
+      }
+
+      .theme-garden .card-left {
+        background: linear-gradient(165deg, #2b124c 0%, #522b5b 45%, #3d1c4f 100%);
+      }
+
+      .theme-garden .party-banner {
+        background: linear-gradient(90deg, #c77dff, #7b2cbf);
+      }
+
+      .theme-garden .vibe-text {
+        color: #e0aaff;
+      }
+
+      .theme-garden .age-badge {
+        background: linear-gradient(135deg, #7b2cbf, #c77dff);
+      }
+
+      .theme-garden .card-right {
+        background: linear-gradient(160deg, rgba(224, 170, 255, 0.18), transparent 55%), #fbf7ff;
+      }
+
+      .theme-garden .greeting { color: #7b2cbf; }
+      .theme-garden .signature { color: #8b6fa8; }
+      .theme-garden .card-ribbon {
+        background: linear-gradient(135deg, #c77dff, #7b2cbf);
+      }
+
+      .theme-carnival {
+        --fold: rgba(0, 180, 216, 0.28);
+      }
+
+      .theme-carnival .card-left {
+        background: linear-gradient(165deg, #fff3b0 0%, #90e0ef 50%, #48cae4 100%);
+      }
+
+      .theme-carnival .party-banner {
+        background: linear-gradient(90deg, #ff9f1c, #e71d36);
+      }
+
+      .theme-carnival .vibe-text {
+        color: #0077b6;
+      }
+
+      .theme-carnival .age-badge {
+        background: linear-gradient(135deg, #0077b6, #00b4d8);
+      }
+
+      .theme-carnival .card-right {
+        background: linear-gradient(160deg, rgba(144, 224, 239, 0.28), transparent 55%), #fffdf5;
+      }
+
+      .theme-carnival .greeting { color: #e71d36; }
+      .theme-carnival .signature { color: #0077b6; }
+      .theme-carnival .card-ribbon {
+        background: linear-gradient(135deg, #ff9f1c, #e71d36);
       }
 
       .card-left,
@@ -307,7 +371,6 @@
       }
 
       .card-left {
-        background: linear-gradient(165deg, #fff3d6 0%, #ffe8ef 55%, #ffd6e0 100%);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -339,6 +402,39 @@
       .balloon.red { background: #ff4d6d; top: 14px; left: 14px; }
       .balloon.gold { background: #ffb703; top: 8px; right: 18px; transform: rotate(8deg); }
       .balloon.rose { background: #c9184a; bottom: 22px; left: 18px; transform: rotate(-10deg); }
+      .balloon.teal { background: #00b4d8; top: 18px; left: 42%; transform: rotate(-6deg); }
+      .balloon.orange { background: #ff9f1c; bottom: 28px; right: 16px; transform: rotate(12deg); }
+
+      .deco-star {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #ffe566;
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      }
+
+      .deco-moon {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ffe566;
+        box-shadow: -8px 0 0 0 #2b124c;
+      }
+
+      .streamer {
+        position: absolute;
+        top: 0;
+        width: 8px;
+        height: 54px;
+        border-radius: 0 0 8px 8px;
+      }
+
+      .streamer.s1 { left: 18%; background: #e71d36; transform: rotate(-8deg); }
+      .streamer.s2 { left: 46%; background: #ff9f1c; transform: rotate(6deg); }
+      .streamer.s3 { left: 72%; background: #0077b6; transform: rotate(-4deg); }
 
       .card-confetti {
         position: absolute;
@@ -799,18 +895,90 @@
           <circle cx="46" cy="34" r="6" fill="#ff4d6d"/>
         </svg>`;
 
-      function leftPanelHtml(age) {
+      const themes = {
+        party: {
+          id: "party",
+          banner: "Party time",
+          vibe: "Good vibes only",
+          sign: "With love, cake & roses",
+          ribbon: "Happy Birthday!",
+        },
+        garden: {
+          id: "garden",
+          banner: "Bloom on",
+          vibe: "Midnight garden",
+          sign: "With moonlight & roses",
+          ribbon: "Sweetest wishes",
+        },
+        carnival: {
+          id: "carnival",
+          banner: "Carnival",
+          vibe: "Let the parade begin",
+          sign: "With confetti & chaos",
+          ribbon: "It's a celebration!",
+        },
+      };
+
+      const themeOrder = ["party", "garden", "carnival"];
+      let lastThemeId = "";
+
+      function pickTheme() {
+        let id = pickRandom(themeOrder);
+        if (themeOrder.length > 1) {
+          while (id === lastThemeId) {
+            id = pickRandom(themeOrder);
+          }
+        }
+        lastThemeId = id;
+        return themes[id];
+      }
+
+      function themeDecorations(themeId) {
+        if (themeId === "garden") {
+          return `
+            <span class="deco-moon" aria-hidden="true"></span>
+            <span class="deco-star" style="top:12%;left:12%"></span>
+            <span class="deco-star" style="top:22%;left:78%"></span>
+            <span class="deco-star" style="top:48%;left:8%"></span>
+            <span class="deco-star" style="top:68%;left:82%"></span>
+            <span class="deco-star" style="top:86%;left:18%"></span>
+            <span class="deco-star" style="top:34%;left:40%"></span>`;
+        }
+        if (themeId === "carnival") {
+          return `
+            <span class="streamer s1" aria-hidden="true"></span>
+            <span class="streamer s2" aria-hidden="true"></span>
+            <span class="streamer s3" aria-hidden="true"></span>
+            <span class="balloon teal" aria-hidden="true"></span>
+            <span class="balloon orange" aria-hidden="true"></span>
+            <span class="balloon gold" aria-hidden="true"></span>
+            ${confettiHtml()}`;
+        }
         return `
-          ${confettiHtml()}
           <span class="balloon red" aria-hidden="true"></span>
           <span class="balloon gold" aria-hidden="true"></span>
           <span class="balloon rose" aria-hidden="true"></span>
+          ${confettiHtml()}`;
+      }
+
+      function themeArt(themeId) {
+        if (themeId === "garden") {
+          return `${roseSvg}${roseSvg}`;
+        }
+        if (themeId === "carnival") {
+          return `${cakeSvg}`;
+        }
+        return `${cakeSvg}${roseSvg}`;
+      }
+
+      function leftPanelHtml(age, theme) {
+        return `
+          ${themeDecorations(theme.id)}
           <div class="card-left-content">
-            <p class="party-banner">Party time</p>
-            <p class="vibe-text">Good vibes only</p>
+            <p class="party-banner">${theme.banner}</p>
+            <p class="vibe-text">${theme.vibe}</p>
             <div class="art-row">
-              ${cakeSvg}
-              ${roseSvg}
+              ${themeArt(theme.id)}
             </div>
             <div class="age-badge">
               <p class="age-display">${age}</p>
@@ -868,6 +1036,46 @@
         ctx.restore();
       }
 
+      function drawStar(ctx, x, y, size, color) {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          const a = (Math.PI / 2) * 3 + i * ((Math.PI * 2) / 5);
+          const r = i % 2 === 0 ? size : size / 2.2;
+          const px = x + Math.cos(a) * r;
+          const py = y + Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawRoseBloom(ctx, x, y) {
+        ctx.save();
+        ctx.strokeStyle = "#2a9d8f";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(x, y + 70);
+        ctx.quadraticCurveTo(x - 6, y + 40, x, y + 20);
+        ctx.stroke();
+        ctx.fillStyle = "#c9184a";
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#ff4d6d";
+        ctx.beginPath();
+        ctx.arc(x - 8, y - 4, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#ff758f";
+        ctx.beginPath();
+        ctx.arc(x + 4, y - 10, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
       function drawCake(ctx, x, y) {
         ctx.save();
         ctx.fillStyle = "#e8c9b0";
@@ -908,7 +1116,47 @@
         ctx.restore();
       }
 
-      function paintSavedCard(name, age, message) {
+      function paintThemeDecor(ctx, themeId, leftW, height) {
+        if (themeId === "garden") {
+          ctx.fillStyle = "#ffe566";
+          ctx.beginPath();
+          ctx.arc(leftW - 70, 70, 22, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#2b124c";
+          ctx.beginPath();
+          ctx.arc(leftW - 58, 64, 20, 0, Math.PI * 2);
+          ctx.fill();
+          const stars = [
+            [50, 50], [140, 90], [230, 40], [80, 200], [360, 120],
+            [40, 340], [400, 280], [180, 420], [320, 500], [90, 580],
+          ];
+          for (const [sx, sy] of stars) {
+            drawStar(ctx, sx, sy, 8 + (sx % 5), "#ffe566");
+          }
+          return;
+        }
+
+        if (themeId === "carnival") {
+          const streamers = [
+            [90, "#e71d36"], [230, "#ff9f1c"], [370, "#0077b6"],
+          ];
+          for (const [sx, color] of streamers) {
+            ctx.fillStyle = color;
+            drawRoundRect(ctx, sx, 0, 14, 90, 8);
+            ctx.fill();
+          }
+          drawBalloon(ctx, 80, 140, "#00b4d8");
+          drawBalloon(ctx, 410, 110, "#ff9f1c");
+          drawBalloon(ctx, 120, height - 150, "#ffb703");
+          return;
+        }
+
+        drawBalloon(ctx, 70, 90, "#ff4d6d");
+        drawBalloon(ctx, 420, 80, "#ffb703");
+        drawBalloon(ctx, 90, height - 140, "#c9184a");
+      }
+
+      function paintSavedCard(name, age, message, theme) {
         const width = 1200;
         const leftW = 500;
         const pad = 48;
@@ -916,8 +1164,7 @@
         measure.font = "700 36px Caveat, cursive, sans-serif";
         const greeting = `Dear ${name},`;
         const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
-        measure.font = "28px Caveat, cursive, sans-serif";
-        const sign = "With love, cake & roses";
+        const sign = theme.sign;
         const textHeight = 70 + bodyLines.length * 44 + 70;
         const height = Math.max(720, textHeight + 80);
 
@@ -926,55 +1173,101 @@
         canvas.height = height;
         const ctx = canvas.getContext("2d");
 
+        const palettes = {
+          party: {
+            left: ["#fff3d6", "#ffe8ef", "#ffd6e0"],
+            right: "#fffdf9",
+            confetti: ["#ff4d6d", "#ffb703", "#c9184a", "#fb8500", "#2a9d8f"],
+            banner: "#ffb703",
+            vibe: "#c9184a",
+            badge: ["#c9184a", "#ff4d6d"],
+            fold: "rgba(201, 24, 74, 0.25)",
+            ribbon: ["#ffb703", "#ff4d6d"],
+            greet: "#c9184a",
+            body: "#4a1942",
+            sign: "#9a6078",
+          },
+          garden: {
+            left: ["#2b124c", "#522b5b", "#3d1c4f"],
+            right: "#fbf7ff",
+            confetti: ["#ffe566", "#c77dff", "#e0aaff"],
+            banner: "#7b2cbf",
+            vibe: "#e0aaff",
+            badge: ["#7b2cbf", "#c77dff"],
+            fold: "rgba(123, 97, 255, 0.3)",
+            ribbon: ["#c77dff", "#7b2cbf"],
+            greet: "#7b2cbf",
+            body: "#3d2463",
+            sign: "#8b6fa8",
+          },
+          carnival: {
+            left: ["#fff3b0", "#90e0ef", "#48cae4"],
+            right: "#fffdf5",
+            confetti: ["#e71d36", "#ff9f1c", "#0077b6", "#00b4d8"],
+            banner: "#e71d36",
+            vibe: "#0077b6",
+            badge: ["#0077b6", "#00b4d8"],
+            fold: "rgba(0, 180, 216, 0.3)",
+            ribbon: ["#ff9f1c", "#e71d36"],
+            greet: "#e71d36",
+            body: "#023047",
+            sign: "#0077b6",
+          },
+        };
+        const p = palettes[theme.id] || palettes.party;
+
         const leftGrad = ctx.createLinearGradient(0, 0, leftW, height);
-        leftGrad.addColorStop(0, "#fff3d6");
-        leftGrad.addColorStop(0.55, "#ffe8ef");
-        leftGrad.addColorStop(1, "#ffd6e0");
+        leftGrad.addColorStop(0, p.left[0]);
+        leftGrad.addColorStop(0.55, p.left[1]);
+        leftGrad.addColorStop(1, p.left[2]);
         ctx.fillStyle = leftGrad;
         ctx.fillRect(0, 0, leftW, height);
 
-        ctx.fillStyle = "#fffdf9";
+        ctx.fillStyle = p.right;
         ctx.fillRect(leftW, 0, width - leftW, height);
 
         const confetti = [
-          [40, 40, "#ff4d6d"], [120, 90, "#ffb703"], [220, 50, "#c9184a"],
-          [80, 180, "#fb8500"], [300, 140, "#ffd166"], [360, 80, "#ff4d6d"],
-          [60, 320, "#2a9d8f"], [400, 260, "#c9184a"], [180, 280, "#ff8fab"],
-          [90, 480, "#ffb703"], [340, 420, "#ff4d6d"], [250, 520, "#fb8500"],
-          [430, 560, "#ffd166"], [30, 600, "#e07a5f"], [150, 640, "#c9184a"],
-          [380, 640, "#ff4d6d"], [280, 200, "#2a9d8f"], [420, 180, "#ffb703"],
+          [40, 40], [120, 90], [220, 50], [80, 180], [300, 140], [360, 80],
+          [60, 320], [400, 260], [180, 280], [90, 480], [340, 420], [250, 520],
+          [430, 560], [30, 600], [150, 640], [380, 640], [280, 200], [420, 180],
         ];
-        for (const [cx, cy, color] of confetti) {
+        confetti.forEach(([cx, cy], i) => {
           ctx.save();
           ctx.translate(cx, cy);
-          ctx.rotate(0.4);
-          ctx.fillStyle = color;
+          ctx.rotate(0.4 + i * 0.2);
+          ctx.fillStyle = p.confetti[i % p.confetti.length];
           ctx.fillRect(-6, -6, 12, 12);
           ctx.restore();
-        }
+        });
 
-        drawBalloon(ctx, 70, 90, "#ff4d6d");
-        drawBalloon(ctx, 420, 80, "#ffb703");
-        drawBalloon(ctx, 90, height - 140, "#c9184a");
+        paintThemeDecor(ctx, theme.id, leftW, height);
 
-        ctx.fillStyle = "#ffb703";
-        drawRoundRect(ctx, leftW / 2 - 90, 70, 180, 36, 18);
+        ctx.fillStyle = p.banner;
+        drawRoundRect(ctx, leftW / 2 - 100, 70, 200, 36, 18);
         ctx.fill();
         ctx.fillStyle = "#fff";
         ctx.font = "800 18px Nunito, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("PARTY TIME", leftW / 2, 94);
+        ctx.fillText(theme.banner.toUpperCase(), leftW / 2, 94);
 
-        ctx.fillStyle = "#c9184a";
+        ctx.fillStyle = p.vibe;
         ctx.font = "800 16px Nunito, sans-serif";
-        ctx.fillText("GOOD VIBES ONLY", leftW / 2, 130);
+        ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, 130);
 
-        drawCake(ctx, leftW / 2, 210);
+        if (theme.id === "garden") {
+          drawRoseBloom(ctx, leftW / 2 - 40, 230);
+          drawRoseBloom(ctx, leftW / 2 + 40, 250);
+        } else {
+          drawCake(ctx, leftW / 2, 210);
+          if (theme.id === "party") {
+            drawRoseBloom(ctx, leftW / 2 + 90, 250);
+          }
+        }
 
         const badgeY = 430;
         const badgeGrad = ctx.createLinearGradient(leftW / 2 - 80, badgeY, leftW / 2 + 80, badgeY + 80);
-        badgeGrad.addColorStop(0, "#c9184a");
-        badgeGrad.addColorStop(1, "#ff4d6d");
+        badgeGrad.addColorStop(0, p.badge[0]);
+        badgeGrad.addColorStop(1, p.badge[1]);
         ctx.fillStyle = badgeGrad;
         drawRoundRect(ctx, leftW / 2 - 80, badgeY, 160, 86, 43);
         ctx.fill();
@@ -984,38 +1277,38 @@
         ctx.font = "800 14px Nunito, sans-serif";
         ctx.fillText("YEARS YOUNG", leftW / 2, badgeY + 72);
 
-        ctx.strokeStyle = "rgba(201, 24, 74, 0.25)";
+        ctx.strokeStyle = p.fold;
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(leftW, 0);
         ctx.lineTo(leftW, height);
         ctx.stroke();
 
-        const ribbonGrad = ctx.createLinearGradient(width - 280, 0, width - 40, 0);
-        ribbonGrad.addColorStop(0, "#ffb703");
-        ribbonGrad.addColorStop(1, "#ff4d6d");
+        const ribbonGrad = ctx.createLinearGradient(width - 300, 0, width - 40, 0);
+        ribbonGrad.addColorStop(0, p.ribbon[0]);
+        ribbonGrad.addColorStop(1, p.ribbon[1]);
         ctx.fillStyle = ribbonGrad;
-        drawRoundRect(ctx, width - 280, 0, 220, 48, 12);
+        drawRoundRect(ctx, width - 300, 0, 240, 48, 12);
         ctx.fill();
         ctx.fillStyle = "#fff";
-        ctx.font = "800 16px Nunito, sans-serif";
-        ctx.fillText("HAPPY BIRTHDAY!", width - 170, 30);
+        ctx.font = "800 15px Nunito, sans-serif";
+        ctx.fillText(theme.ribbon.toUpperCase(), width - 180, 30);
 
         let ty = 90;
         ctx.textAlign = "left";
-        ctx.fillStyle = "#c9184a";
+        ctx.fillStyle = p.greet;
         ctx.font = "700 42px Caveat, cursive, sans-serif";
         ctx.fillText(greeting, leftW + pad, ty);
         ty += 58;
 
-        ctx.fillStyle = "#4a1942";
+        ctx.fillStyle = p.body;
         ctx.font = "36px Caveat, cursive, sans-serif";
         for (const line of bodyLines) {
           ctx.fillText(line, leftW + pad, ty);
           ty += 44;
         }
 
-        ctx.fillStyle = "#9a6078";
+        ctx.fillStyle = p.sign;
         ctx.font = "28px Caveat, cursive, sans-serif";
         ctx.textAlign = "right";
         ctx.fillText(sign, width - pad, height - 40);
@@ -1023,12 +1316,12 @@
         return canvas;
       }
 
-      async function renderCardImage(_cardInterior, name, age, message) {
+      async function renderCardImage(_cardInterior, name, age, message, theme) {
         if (document.fonts?.ready) {
           await document.fonts.ready;
         }
 
-        const canvas = paintSavedCard(name, age, message);
+        const canvas = paintSavedCard(name, age, message, theme);
         return new Promise((resolve, reject) => {
           canvas.toBlob((blob) => {
             if (blob) resolve(blob);
@@ -1037,22 +1330,22 @@
         });
       }
 
-      function createCardElement(name, age, message) {
+      function createCardElement(name, age, message, theme) {
         const item = document.createElement("article");
         item.className = "card-item";
 
         item.innerHTML = `
           <div class="card-stage">
             <div class="birthday-card">
-              <div class="card-interior">
-                <span class="card-ribbon">Happy Birthday!</span>
+              <div class="card-interior theme-${theme.id}">
+                <span class="card-ribbon">${escapeHtml(theme.ribbon)}</span>
                 <div class="card-left">
-                  ${leftPanelHtml(age)}
+                  ${leftPanelHtml(age, theme)}
                 </div>
                 <div class="card-right">
                   <p class="greeting">Dear ${escapeHtml(name)},</p>
                   <p class="message">${escapeHtml(message)}</p>
-                  <p class="signature">With love, cake &amp; roses</p>
+                  <p class="signature">${escapeHtml(theme.sign)}</p>
                 </div>
               </div>
             </div>
@@ -1065,8 +1358,8 @@
 
         const saveBtn = item.querySelector(".save-btn");
         const copyBtn = item.querySelector(".copy-btn");
-        saveBtn.addEventListener("click", () => saveCardToMessages(item, name, age, message, saveBtn));
-        copyBtn.addEventListener("click", () => copyCard(item, name, age, message, copyBtn));
+        saveBtn.addEventListener("click", () => saveCardToMessages(item, name, age, message, theme, saveBtn));
+        copyBtn.addEventListener("click", () => copyCard(item, name, age, message, theme, copyBtn));
 
         return item;
       }
@@ -1077,7 +1370,7 @@
         return div.innerHTML;
       }
 
-      async function saveCardToMessages(item, name, age, message, button) {
+      async function saveCardToMessages(item, name, age, message, theme, button) {
         const cardInterior = item.querySelector(".card-interior");
         const text = formatCardText(name, age, message);
         const filename = `birthday-card-${name.toLowerCase().replace(/\s+/g, "-")}.png`;
@@ -1086,7 +1379,7 @@
         button.textContent = "Saving…";
 
         try {
-          const imageBlob = await renderCardImage(cardInterior, name, age, message);
+          const imageBlob = await renderCardImage(cardInterior, name, age, message, theme);
           const file = new File([imageBlob], filename, { type: "image/png" });
 
           if (navigator.share) {
@@ -1108,7 +1401,7 @@
         } catch (err) {
           if (err?.name === "AbortError") return;
           try {
-            const imageBlob = await renderCardImage(cardInterior, name, age, message);
+            const imageBlob = await renderCardImage(cardInterior, name, age, message, theme);
             downloadBlob(imageBlob, filename);
             showToast("Card downloaded — share it from your Photos app!");
           } catch {
@@ -1120,7 +1413,7 @@
         }
       }
 
-      async function copyCard(item, name, age, message, button) {
+      async function copyCard(item, name, age, message, theme, button) {
         const cardInterior = item.querySelector(".card-interior");
         const text = formatCardText(name, age, message);
 
@@ -1128,7 +1421,7 @@
         button.textContent = "Copying…";
 
         try {
-          const imageBlob = await renderCardImage(cardInterior, name, age, message);
+          const imageBlob = await renderCardImage(cardInterior, name, age, message, theme);
           const textBlob = new Blob([text], { type: "text/plain" });
 
           if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
@@ -1176,7 +1469,8 @@
 
       function addCard(name, age, hobby) {
         const message = generateMessage(name, age, hobby);
-        const card = createCardElement(name, age, message);
+        const theme = pickTheme();
+        const card = createCardElement(name, age, message, theme);
         emptyState.hidden = true;
         cardsStack.hidden = false;
         cardsStack.prepend(card);
