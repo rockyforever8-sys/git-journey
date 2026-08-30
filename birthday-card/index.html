@@ -59,7 +59,7 @@
         width: 100%;
         height: auto;
         object-fit: cover;
-        object-position: center top;
+        object-position: center;
       }
 
       .confetti,
@@ -290,6 +290,54 @@
         box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.18);
       }
 
+      .portrait-picker {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .portrait-choice {
+        display: block;
+        position: relative;
+        margin: 0;
+        cursor: pointer;
+        border: 2px solid #f5d0d9;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .portrait-choice input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+      }
+
+      .portrait-choice img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 8;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .portrait-choice span {
+        display: block;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .portrait-choice:has(input:checked),
+      .portrait-choice:has(input:focus-visible) {
+        border-color: var(--rose-light);
+        box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.18);
+      }
+
       button {
         width: 100%;
         margin-top: 8px;
@@ -484,8 +532,10 @@
         grid-area: photo;
         width: 100%;
         height: auto;
-        aspect-ratio: 1080 / 622;
-        background: url("images/family-portrait.jpg") center / 100% 100% no-repeat;
+        aspect-ratio: 1080 / 533;
+        background-position: center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
         box-shadow: inset 0 -2px 0 rgba(212, 175, 55, 0.45);
         z-index: 1;
       }
@@ -873,7 +923,7 @@
     <div class="burst-confetti" aria-hidden="true" id="burst-confetti"></div>
 
     <div class="page-portrait">
-      <img src="images/family-portrait.jpg" alt="Family portrait" />
+      <img id="page-portrait-img" src="images/family-home.jpg" alt="Family portrait" />
     </div>
 
     <div class="page">
@@ -898,6 +948,21 @@
             <div class="field">
               <label for="hobby">Hobby</label>
               <input id="hobby" name="hobby" type="text" placeholder="e.g. baking, hiking, gaming" required />
+            </div>
+            <div class="field">
+              <label id="portrait-label">Family portrait</label>
+              <div class="portrait-picker" role="radiogroup" aria-labelledby="portrait-label">
+                <label class="portrait-choice">
+                  <input type="radio" name="portrait" value="home" checked aria-label="Family at home" />
+                  <img src="images/family-home.jpg" alt="" />
+                  <span>Family at home</span>
+                </label>
+                <label class="portrait-choice">
+                  <input type="radio" name="portrait" value="lucky-cat" aria-label="Lucky cat day" />
+                  <img src="images/family-lucky-cat.jpg" alt="" />
+                  <span>Lucky cat day</span>
+                </label>
+              </div>
             </div>
             <button type="submit">Generate Funny Message</button>
             <button type="button" class="lucky-btn" id="lucky-btn">I'm Feeling Lucky</button>
@@ -1210,22 +1275,59 @@
           </div>`;
       }
 
-      const FAMILY_PORTRAIT_SRC = "images/family-portrait.jpg";
-      let familyPortraitPromise = null;
+      const PORTRAITS = {
+        home: {
+          id: "home",
+          src: "images/family-home.jpg",
+          label: "Family at home",
+          width: 1080,
+          height: 533,
+        },
+        "lucky-cat": {
+          id: "lucky-cat",
+          src: "images/family-lucky-cat.jpg",
+          label: "Lucky cat day",
+          width: 1080,
+          height: 622,
+        },
+      };
 
-      function loadFamilyPortrait() {
-        if (!familyPortraitPromise) {
-          familyPortraitPromise = new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = () => resolve(null);
-            img.src = FAMILY_PORTRAIT_SRC;
-          });
-        }
-        return familyPortraitPromise;
+      const portraitCache = new Map();
+
+      function getPortrait(id) {
+        return PORTRAITS[id] || PORTRAITS.home;
       }
 
-      loadFamilyPortrait();
+      function getSelectedPortrait() {
+        const checked = document.querySelector('input[name="portrait"]:checked');
+        return getPortrait(checked?.value);
+      }
+
+      function loadPortrait(src) {
+        const cached = portraitCache.get(src);
+        if (cached) {
+          return cached;
+        }
+        const promise = new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => resolve(null);
+          img.src = src;
+        });
+        portraitCache.set(src, promise);
+        return promise;
+      }
+
+      function syncPagePortrait(src) {
+        const hero = document.getElementById("page-portrait-img");
+        if (hero) {
+          hero.src = src;
+        }
+      }
+
+      Object.values(PORTRAITS).forEach((portrait) => {
+        void loadPortrait(portrait.src);
+      });
 
       function wrapCanvasText(ctx, text, maxWidth) {
         const lines = [];
@@ -1409,7 +1511,7 @@
         drawBalloon(ctx, 90, height - 140, "#c9184a");
       }
 
-      async function paintSavedCard(name, age, message, theme) {
+      async function paintSavedCard(name, age, message, theme, portraitChoice) {
         const width = 1200;
         const leftW = 500;
         const pad = 48;
@@ -1418,9 +1520,10 @@
         const greeting = `Dear ${name},`;
         const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
         const sign = theme.sign;
-        const portrait = await loadFamilyPortrait();
-        const sourceW = portrait?.naturalWidth || 1080;
-        const sourceH = portrait?.naturalHeight || 622;
+        const chosen = portraitChoice || PORTRAITS.home;
+        const portrait = await loadPortrait(chosen.src);
+        const sourceW = portrait?.naturalWidth || chosen.width;
+        const sourceH = portrait?.naturalHeight || chosen.height;
         const stripH = Math.round(width * sourceH / sourceW);
         const panelH = 440;
         const textHeight = stripH + 50 + bodyLines.length * 40 + 70;
@@ -1602,12 +1705,12 @@
         return canvas;
       }
 
-      async function renderCardImage(_cardInterior, name, age, message, theme) {
+      async function renderCardImage(_cardInterior, name, age, message, theme, portraitChoice) {
         if (document.fonts?.ready) {
           await document.fonts.ready;
         }
 
-        const canvas = await paintSavedCard(name, age, message, theme);
+        const canvas = await paintSavedCard(name, age, message, theme, portraitChoice);
         return new Promise((resolve, reject) => {
           canvas.toBlob((blob) => {
             if (blob) resolve(blob);
@@ -1616,15 +1719,16 @@
         });
       }
 
-      function createCardElement(name, age, message, theme) {
+      function createCardElement(name, age, message, theme, portraitChoice) {
         const item = document.createElement("article");
         item.className = "card-item";
+        const portrait = portraitChoice || PORTRAITS.home;
 
         item.innerHTML = `
           <div class="card-stage">
             <div class="birthday-card">
               <div class="card-interior theme-${theme.id}">
-                <div class="card-portrait-strip" role="img" aria-label="Family portrait"></div>
+                <div class="card-portrait-strip" role="img" aria-label="${escapeHtml(portrait.label)}" style="background-image: url('${portrait.src}'); aspect-ratio: ${portrait.width} / ${portrait.height};"></div>
                 <span class="flourish tl" aria-hidden="true"></span>
                 <span class="flourish tr" aria-hidden="true"></span>
                 <span class="flourish bl" aria-hidden="true"></span>
@@ -1649,8 +1753,8 @@
 
         const saveBtn = item.querySelector(".save-btn");
         const copyBtn = item.querySelector(".copy-btn");
-        saveBtn.addEventListener("click", () => saveCardToMessages(item, name, age, message, theme, saveBtn));
-        copyBtn.addEventListener("click", () => copyCard(item, name, age, message, theme, copyBtn));
+        saveBtn.addEventListener("click", () => saveCardToMessages(item, name, age, message, theme, saveBtn, portrait));
+        copyBtn.addEventListener("click", () => copyCard(item, name, age, message, theme, copyBtn, portrait));
 
         return item;
       }
@@ -1661,7 +1765,7 @@
         return div.innerHTML;
       }
 
-      async function saveCardToMessages(item, name, age, message, theme, button) {
+      async function saveCardToMessages(item, name, age, message, theme, button, portraitChoice) {
         const cardInterior = item.querySelector(".card-interior");
         const text = formatCardText(name, age, message);
         const filename = `birthday-card-${name.toLowerCase().replace(/\s+/g, "-")}.png`;
@@ -1670,7 +1774,7 @@
         button.textContent = "Saving…";
 
         try {
-          const imageBlob = await renderCardImage(cardInterior, name, age, message, theme);
+          const imageBlob = await renderCardImage(cardInterior, name, age, message, theme, portraitChoice);
           const file = new File([imageBlob], filename, { type: "image/png" });
 
           if (navigator.share) {
@@ -1692,7 +1796,7 @@
         } catch (err) {
           if (err?.name === "AbortError") return;
           try {
-            const imageBlob = await renderCardImage(cardInterior, name, age, message, theme);
+            const imageBlob = await renderCardImage(cardInterior, name, age, message, theme, portraitChoice);
             downloadBlob(imageBlob, filename);
             showToast("Card downloaded — share it from your Photos app!");
           } catch {
@@ -1704,7 +1808,7 @@
         }
       }
 
-      async function copyCard(item, name, age, message, theme, button) {
+      async function copyCard(item, name, age, message, theme, button, portraitChoice) {
         const cardInterior = item.querySelector(".card-interior");
         const text = formatCardText(name, age, message);
 
@@ -1712,7 +1816,7 @@
         button.textContent = "Copying…";
 
         try {
-          const imageBlob = await renderCardImage(cardInterior, name, age, message, theme);
+          const imageBlob = await renderCardImage(cardInterior, name, age, message, theme, portraitChoice);
           const textBlob = new Blob([text], { type: "text/plain" });
 
           if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
@@ -1761,7 +1865,8 @@
       function addCard(name, age, hobby) {
         const message = generateMessage(name, age, hobby);
         const theme = pickTheme();
-        const card = createCardElement(name, age, message, theme);
+        const portrait = getSelectedPortrait();
+        const card = createCardElement(name, age, message, theme, portrait);
         emptyState.hidden = true;
         cardsStack.hidden = false;
         cardsStack.prepend(card);
@@ -1794,6 +1899,14 @@
 
         addCard(name, age, hobby);
         showToast(`Lucky pick: ${name}, ${age}, loves ${hobby}!`);
+      });
+
+      document.querySelectorAll('input[name="portrait"]').forEach((input) => {
+        input.addEventListener("change", () => {
+          if (input.checked) {
+            syncPagePortrait(getPortrait(input.value).src);
+          }
+        });
       });
     </script>
   </body>
