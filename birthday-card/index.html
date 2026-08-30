@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Card Writer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --pink: #ff6b9d;
+        --gold: #ffd166;
+        --purple: #9b5de5;
+        --teal: #00bbf9;
+        --coral: #ff8c69;
+        --cream: #fff8f0;
+        --paper: #fffdf7;
+        --ink: #3d2c4d;
+        --shadow: rgba(61, 44, 77, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Nunito", sans-serif;
+        color: var(--ink);
+        background: linear-gradient(135deg, #ffeef5 0%, #fff4e6 35%, #f0e8ff 70%, #e8f8ff 100%);
+        overflow-x: hidden;
+      }
+
+      .confetti {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .confetti span {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        opacity: 0.55;
+        animation: drift 12s linear infinite;
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translateY(-10vh) rotate(0deg);
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+        }
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 24px 48px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+
+      .title-badge {
+        display: inline-block;
+        background: linear-gradient(90deg, var(--pink), var(--purple), var(--teal));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+        line-height: 1.1;
+      }
+
+      .subtitle {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #6b5b7a;
+        font-weight: 600;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 32px;
+        align-items: start;
+      }
+
+      @media (max-width: 860px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 16px 48px var(--shadow);
+      }
+
+      .panel h2 {
+        margin: 0 0 20px;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--purple);
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #e8dff0;
+        border-radius: 14px;
+        font: inherit;
+        font-size: 1rem;
+        background: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--pink);
+        box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
+      }
+
+      button {
+        width: 100%;
+        margin-top: 8px;
+        padding: 16px 20px;
+        border: none;
+        border-radius: 16px;
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #fff;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--pink), var(--purple));
+        box-shadow: 0 8px 24px rgba(155, 93, 229, 0.35);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(155, 93, 229, 0.45);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .card-stage {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 420px;
+        padding: 12px;
+      }
+
+      .birthday-card {
+        width: 100%;
+        max-width: 480px;
+        aspect-ratio: 4 / 3;
+        perspective: 1200px;
+      }
+
+      .card-interior {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow:
+          0 2px 0 #e8dcc8,
+          0 20px 50px rgba(61, 44, 77, 0.22),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        background: var(--paper);
+        position: relative;
+      }
+
+      .card-interior::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 2px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(200, 180, 150, 0.5) 15%,
+          rgba(200, 180, 150, 0.5) 85%,
+          transparent
+        );
+        transform: translateX(-50%);
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .card-left,
+      .card-right {
+        padding: 28px 24px;
+        position: relative;
+      }
+
+      .card-left {
+        background:
+          radial-gradient(circle at 30% 25%, rgba(255, 209, 102, 0.25), transparent 45%),
+          radial-gradient(circle at 70% 75%, rgba(255, 107, 157, 0.15), transparent 40%),
+          var(--cream);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid rgba(200, 180, 150, 0.35);
+      }
+
+      .card-left .balloons {
+        font-size: 2.8rem;
+        line-height: 1;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      }
+
+      .card-left .age-display {
+        font-family: "Caveat", cursive;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--purple);
+        margin: 0;
+      }
+
+      .card-left .age-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #9a8aa8;
+        margin-top: 4px;
+      }
+
+      .card-right {
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.5), transparent 50%),
+          var(--paper);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .card-right .greeting {
+        font-family: "Caveat", cursive;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--pink);
+        margin: 0 0 12px;
+      }
+
+      .card-right .message {
+        font-family: "Caveat", cursive;
+        font-size: 1.35rem;
+        line-height: 1.55;
+        color: var(--ink);
+        margin: 0 0 20px;
+        min-height: 120px;
+      }
+
+      .card-right .signature {
+        font-family: "Caveat", cursive;
+        font-size: 1.2rem;
+        color: #7a6b88;
+        margin: 0;
+        text-align: right;
+      }
+
+      .placeholder-text {
+        color: #b5a8c0;
+        font-style: italic;
+      }
+
+      .card-ribbon {
+        position: absolute;
+        top: -6px;
+        right: 24px;
+        background: linear-gradient(135deg, var(--gold), var(--coral));
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 6px 14px;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 4px 12px rgba(255, 140, 105, 0.4);
+        z-index: 3;
+      }
+
+      .copy-btn {
+        margin-top: 16px;
+        background: linear-gradient(135deg, var(--teal), #00a896);
+        box-shadow: 0 8px 24px rgba(0, 187, 249, 0.3);
+        font-size: 0.95rem;
+        padding: 12px 16px;
+      }
+
+      .copy-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: var(--ink);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        opacity: 0;
+        transition: transform 0.3s, opacity 0.3s;
+        z-index: 100;
+        pointer-events: none;
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="confetti" aria-hidden="true" id="confetti"></div>
+
+    <div class="page">
+      <header>
+        <h1 class="title-badge">Birthday Card Writer</h1>
+        <p class="subtitle">Turn name, age &amp; hobby into a hilariously heartfelt card message</p>
+      </header>
+
+      <div class="layout">
+        <section class="panel">
+          <h2>Tell us about the birthday star</h2>
+          <form id="card-form">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" placeholder="e.g. Alex" required />
+            </div>
+            <div class="field">
+              <label for="age">Age</label>
+              <input id="age" name="age" type="number" min="1" max="120" placeholder="e.g. 30" required />
+            </div>
+            <div class="field">
+              <label for="hobby">Hobby</label>
+              <input id="hobby" name="hobby" type="text" placeholder="e.g. baking, hiking, gaming" required />
+            </div>
+            <button type="submit">Generate Funny Message</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>Your card</h2>
+          <div class="card-stage">
+            <div class="birthday-card">
+              <div class="card-interior">
+                <span class="card-ribbon">Happy Birthday!</span>
+                <div class="card-left">
+                  <div class="balloons" aria-hidden="true">🎈🎂🎉</div>
+                  <p class="age-display" id="card-age">?</p>
+                  <p class="age-label">years young</p>
+                </div>
+                <div class="card-right">
+                  <p class="greeting" id="card-greeting">Dear friend,</p>
+                  <p class="message placeholder-text" id="card-message">
+                    Fill in the details on the left and hit Generate to see your funny birthday message here!
+                  </p>
+                  <p class="signature">With love &amp; laughter ✨</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="copy-btn" id="copy-btn" disabled>Copy message</button>
+        </section>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status">Message copied!</div>
+
+    <script>
+      const colors = ["#ff6b9d", "#ffd166", "#9b5de5", "#00bbf9", "#ff8c69", "#06d6a0"];
+      const confettiEl = document.getElementById("confetti");
+
+      for (let i = 0; i < 40; i++) {
+        const piece = document.createElement("span");
+        piece.style.left = Math.random() * 100 + "%";
+        piece.style.background = colors[i % colors.length];
+        piece.style.animationDelay = Math.random() * 12 + "s";
+        piece.style.animationDuration = 8 + Math.random() * 10 + "s";
+        piece.style.width = 6 + Math.random() * 8 + "px";
+        piece.style.height = piece.style.width;
+        confettiEl.appendChild(piece);
+      }
+
+      const templates = [
+        (name, age, hobby) =>
+          `Happy ${age}th, ${name}! They say age is just a number — yours is clearly the Wi-Fi password: strong, memorable, and occasionally needs a reset. May your year be filled with more ${hobby} than responsibilities!`,
+        (name, age, hobby) =>
+          `${name}, you're turning ${age} and still obsessed with ${hobby}? Respect. At this point, ${hobby} isn't a hobby — it's a lifestyle, a personality trait, and probably your retirement plan. Have the best birthday ever!`,
+        (name, age, hobby) =>
+          `Dear ${name}, congrats on level ${age}! Your main quest this year: maximize ${hobby}, minimize adulting. Side quest: eat cake. You've got this, birthday legend!`,
+        (name, age, hobby) =>
+          `${name} at ${age}? More like ${age} years of being awesome at ${hobby}! Scientists still can't explain how you make ${hobby} look that good. Wishing you cake, laughs, and zero boring moments!`,
+        (name, age, hobby) =>
+          `Happy Birthday, ${name}! ${age} candles means ${age} wishes, but let's be honest — you only need one: unlimited time for ${hobby}. May your cake be huge and your ${hobby} skills even huger!`,
+        (name, age, hobby) =>
+          `${name}, welcome to ${age}! You're not getting older, you're just becoming a more refined version of someone who loves ${hobby}. May your birthday be as epic as your ${hobby} stories!`,
+        (name, age, hobby) =>
+          `Roses are red, violets are blue, ${name} is ${age} and still crushing ${hobby} too! Here's to another year of being wonderfully, hilariously you. Party on!`,
+        (name, age, hobby) =>
+          `Breaking news: ${name} turns ${age} today! Eyewitnesses report excessive ${hobby}, dangerous levels of fun, and cake consumption. Stay tuned for more birthday chaos!`,
+      ];
+
+      function generateMessage(name, age, hobby) {
+        const idx = Math.abs(hashCode(name + age + hobby)) % templates.length;
+        return templates[idx](name, age, hobby);
+      }
+
+      function hashCode(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          hash = (hash << 5) - hash + str.charCodeAt(i);
+          hash |= 0;
+        }
+        return hash;
+      }
+
+      const form = document.getElementById("card-form");
+      const cardAge = document.getElementById("card-age");
+      const cardGreeting = document.getElementById("card-greeting");
+      const cardMessage = document.getElementById("card-message");
+      const copyBtn = document.getElementById("copy-btn");
+      const toast = document.getElementById("toast");
+
+      let currentMessage = "";
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const age = parseInt(document.getElementById("age").value, 10);
+        const hobby = document.getElementById("hobby").value.trim();
+
+        if (!name || !hobby || !age) return;
+
+        currentMessage = generateMessage(name, age, hobby);
+
+        cardAge.textContent = age;
+        cardGreeting.textContent = `Dear ${name},`;
+        cardMessage.textContent = currentMessage;
+        cardMessage.classList.remove("placeholder-text");
+        copyBtn.disabled = false;
+      });
+
+      copyBtn.addEventListener("click", async () => {
+        if (!currentMessage) return;
+        try {
+          await navigator.clipboard.writeText(currentMessage);
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 2000);
+        } catch {
+          toast.textContent = "Could not copy — select the text manually";
+          toast.classList.add("show");
+          setTimeout(() => {
+            toast.classList.remove("show");
+            toast.textContent = "Message copied!";
+          }, 2500);
+        }
+      });
+    </script>
+  </body>
+</html>
