@@ -309,79 +309,92 @@
       }
 
       .card-left {
-        background:
-          radial-gradient(circle at 18% 22%, #ffe27a 0 7px, transparent 8px),
-          radial-gradient(circle at 82% 18%, #ff8fab 0 6px, transparent 7px),
-          radial-gradient(circle at 12% 78%, #ff4d6d 0 5px, transparent 6px),
-          radial-gradient(circle at 88% 72%, #ffd166 0 6px, transparent 7px),
-          radial-gradient(circle at 50% 8%, #c9184a 0 4px, transparent 5px),
-          radial-gradient(circle at 70% 90%, #fb8500 0 5px, transparent 6px),
-          radial-gradient(circle at 30% 48%, rgba(255, 183, 3, 0.35), transparent 40%),
-          radial-gradient(circle at 72% 62%, rgba(201, 24, 74, 0.18), transparent 42%),
-          linear-gradient(165deg, #fff3d6 0%, #ffe8ef 55%, #ffd6e0 100%);
+        background: linear-gradient(165deg, #fff3d6 0%, #ffe8ef 55%, #ffd6e0 100%);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         border-right: 1px solid rgba(201, 24, 74, 0.15);
-        gap: 6px;
+        gap: 4px;
         overflow: hidden;
       }
 
-      .card-left .corner-emoji {
+      .card-confetti {
         position: absolute;
-        font-size: 1.35rem;
-        line-height: 1;
-        z-index: 1;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
       }
 
-      .card-left .corner-emoji.tl { top: 10px; left: 10px; }
-      .card-left .corner-emoji.tr { top: 12px; right: 12px; }
-      .card-left .corner-emoji.bl { bottom: 10px; left: 12px; }
-      .card-left .corner-emoji.br { bottom: 12px; right: 10px; }
+      .card-confetti i {
+        position: absolute;
+        display: block;
+        border-radius: 2px;
+      }
+
+      .card-left-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .card-left .party-banner {
+        margin: 0 0 2px;
+        padding: 4px 14px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ffb703, #fb8500);
+        color: #fff;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        box-shadow: 0 3px 8px rgba(251, 133, 0, 0.35);
+      }
 
       .card-left .art-row {
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        gap: 10px;
-        margin-bottom: 2px;
+        gap: 6px;
+        margin: 2px 0;
       }
 
-      .card-left .emoji-art {
-        font-size: 3.2rem;
-        line-height: 1;
-        filter: drop-shadow(0 3px 4px rgba(74, 25, 66, 0.18));
+      .card-left .art-row svg {
+        display: block;
+        filter: drop-shadow(0 4px 6px rgba(74, 25, 66, 0.2));
       }
 
-      .card-left .sparkle-row {
-        font-size: 1.05rem;
-        letter-spacing: 0.18em;
-        line-height: 1;
-        margin: 0 0 4px;
+      .card-left .cake-svg {
+        width: 88px;
+        height: 88px;
       }
 
-      .card-left .party-banner {
-        margin: 0 0 4px;
-        padding: 3px 12px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, #ffb703, #fb8500);
-        color: #fff;
-        font-size: 0.68rem;
+      .card-left .rose-svg {
+        width: 64px;
+        height: 80px;
+      }
+
+      .card-left .vibe-text {
+        margin: 0;
+        font-size: 0.62rem;
         font-weight: 800;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
-        box-shadow: 0 3px 8px rgba(251, 133, 0, 0.35);
+        color: #c9184a;
       }
 
       .card-left .age-badge {
-        min-width: 88px;
+        min-width: 92px;
         padding: 8px 14px 6px;
         border-radius: 999px;
         background: linear-gradient(135deg, #c9184a, #ff4d6d);
         color: #fff;
         text-align: center;
         box-shadow: 0 6px 14px rgba(201, 24, 74, 0.35);
+        margin-top: 2px;
       }
 
       .card-left .age-display {
@@ -689,6 +702,85 @@
         URL.revokeObjectURL(url);
       }
 
+      const confettiPieces = [
+        { top: "8%", left: "10%", w: 7, h: 7, color: "#ff4d6d", rot: 18 },
+        { top: "14%", left: "78%", w: 6, h: 6, color: "#ffb703", rot: -24 },
+        { top: "22%", left: "42%", w: 5, h: 5, color: "#c9184a", rot: 45 },
+        { top: "6%", left: "55%", w: 6, h: 6, color: "#fb8500", rot: -12 },
+        { top: "72%", left: "8%", w: 7, h: 7, color: "#ffd166", rot: 30 },
+        { top: "80%", left: "72%", w: 6, h: 6, color: "#ff4d6d", rot: -35 },
+        { top: "68%", left: "38%", w: 5, h: 5, color: "#2a9d8f", rot: 12 },
+        { top: "88%", left: "52%", w: 6, h: 6, color: "#c9184a", rot: 55 },
+        { top: "38%", left: "6%", w: 5, h: 5, color: "#fb8500", rot: -8 },
+        { top: "48%", left: "86%", w: 7, h: 7, color: "#ffb703", rot: 22 },
+        { top: "30%", left: "88%", w: 5, h: 5, color: "#ff8fab", rot: -40 },
+        { top: "58%", left: "14%", w: 6, h: 6, color: "#e07a5f", rot: 16 },
+        { top: "18%", left: "24%", w: 5, h: 5, color: "#ffd166", rot: -18 },
+        { top: "92%", left: "22%", w: 5, h: 5, color: "#ff4d6d", rot: 28 },
+        { top: "52%", left: "78%", w: 5, h: 5, color: "#c9184a", rot: -15 },
+      ];
+
+      function confettiHtml() {
+        return `<div class="card-confetti" aria-hidden="true">${confettiPieces
+          .map(
+            (p) =>
+              `<i style="top:${p.top};left:${p.left};width:${p.w}px;height:${p.h}px;background:${p.color};transform:rotate(${p.rot}deg)"></i>`
+          )
+          .join("")}</div>`;
+      }
+
+      const cakeSvg = `
+        <svg class="cake-svg" viewBox="0 0 120 120" aria-hidden="true">
+          <ellipse cx="60" cy="110" rx="50" ry="7" fill="#e8c9b0"/>
+          <rect x="24" y="78" width="72" height="26" rx="5" fill="#f4a261"/>
+          <rect x="24" y="73" width="72" height="10" rx="4" fill="#fff5f0"/>
+          <rect x="32" y="56" width="56" height="22" rx="4" fill="#e76f51"/>
+          <rect x="32" y="51" width="56" height="10" rx="4" fill="#fff5f0"/>
+          <rect x="40" y="36" width="40" height="18" rx="4" fill="#f4a261"/>
+          <rect x="40" y="31" width="40" height="10" rx="4" fill="#fff5f0"/>
+          <rect x="50" y="16" width="4" height="16" fill="#ffd166"/>
+          <rect x="58" y="12" width="4" height="20" fill="#ffd166"/>
+          <rect x="66" y="16" width="4" height="16" fill="#ffd166"/>
+          <ellipse cx="52" cy="13" rx="5" ry="6" fill="#ff4d6d"/>
+          <ellipse cx="60" cy="9" rx="5" ry="6" fill="#ffb703"/>
+          <ellipse cx="68" cy="13" rx="5" ry="6" fill="#ff4d6d"/>
+          <circle cx="34" cy="62" r="2.5" fill="#c9184a"/>
+          <circle cx="78" cy="64" r="2" fill="#2a9d8f"/>
+          <circle cx="48" cy="44" r="2" fill="#ffb703"/>
+          <circle cx="68" cy="42" r="2.5" fill="#c9184a"/>
+          <circle cx="56" cy="88" r="2" fill="#ff4d6d"/>
+        </svg>`;
+
+      const roseSvg = `
+        <svg class="rose-svg" viewBox="0 0 80 100" aria-hidden="true">
+          <path d="M40 96 Q36 72 40 52" stroke="#2a9d8f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="32" cy="74" rx="11" ry="5" fill="#52b788" transform="rotate(-28 32 74)"/>
+          <ellipse cx="50" cy="66" rx="10" ry="5" fill="#40916c" transform="rotate(22 50 66)"/>
+          <circle cx="40" cy="30" r="20" fill="#c9184a"/>
+          <circle cx="30" cy="26" r="12" fill="#ff4d6d"/>
+          <circle cx="50" cy="24" r="11" fill="#e63946"/>
+          <circle cx="40" cy="18" r="9" fill="#ff758f"/>
+          <circle cx="36" cy="32" r="7" fill="#c9184a"/>
+          <circle cx="46" cy="34" r="6" fill="#ff4d6d"/>
+        </svg>`;
+
+      function leftPanelHtml(age) {
+        return `
+          ${confettiHtml()}
+          <div class="card-left-content">
+            <p class="party-banner">Party time</p>
+            <p class="vibe-text">Good vibes only</p>
+            <div class="art-row">
+              ${cakeSvg}
+              ${roseSvg}
+            </div>
+            <div class="age-badge">
+              <p class="age-display">${age}</p>
+              <p class="age-label">years young</p>
+            </div>
+          </div>`;
+      }
+
       function createCardElement(name, age, message) {
         const item = document.createElement("article");
         item.className = "card-item";
@@ -699,20 +791,7 @@
               <div class="card-interior">
                 <span class="card-ribbon">Happy Birthday!</span>
                 <div class="card-left">
-                  <span class="corner-emoji tl" aria-hidden="true">🎈</span>
-                  <span class="corner-emoji tr" aria-hidden="true">🎉</span>
-                  <span class="corner-emoji bl" aria-hidden="true">✨</span>
-                  <span class="corner-emoji br" aria-hidden="true">🎁</span>
-                  <p class="party-banner">Party time</p>
-                  <p class="sparkle-row" aria-hidden="true">✨ 💫 ✨</p>
-                  <div class="art-row" aria-hidden="true">
-                    <span class="emoji-art">🎂</span>
-                    <span class="emoji-art">🌹</span>
-                  </div>
-                  <div class="age-badge">
-                    <p class="age-display">${age}</p>
-                    <p class="age-label">years young</p>
-                  </div>
+                  ${leftPanelHtml(age)}
                 </div>
                 <div class="card-right">
                   <p class="greeting">Dear ${escapeHtml(name)},</p>
