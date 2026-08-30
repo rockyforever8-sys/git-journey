@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -360,7 +360,7 @@
         width: 100%;
         min-height: 380px;
         display: grid;
-        grid-template-columns: 38% minmax(0, 1fr);
+        grid-template-columns: 34% minmax(0, 1fr);
         grid-template-rows: auto 1fr;
         grid-template-areas:
           "photo photo"
@@ -395,7 +395,7 @@
         position: absolute;
         top: var(--portrait-strip);
         bottom: 0;
-        left: 38%;
+        left: 34%;
         width: 2px;
         background: linear-gradient(to bottom, transparent, var(--fold) 15%, var(--fold) 85%, transparent);
         transform: translateX(-50%);
@@ -698,47 +698,44 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        padding: 22px 18px 18px 16px;
+        padding: 24px 22px 20px 20px;
       }
 
       .card-right .greeting,
       .card-right .message,
       .card-right .signature {
+        font-family: "Patrick Hand", "Segoe Print", "Comic Sans MS", cursive;
         font-variant-numeric: lining-nums;
         overflow-wrap: break-word;
         word-break: normal;
         hyphens: none;
+        letter-spacing: 0.01em;
       }
 
       .card-right .greeting {
-        font-family: "Cormorant Garamond", Georgia, serif;
-        font-size: 1.45rem;
-        font-style: italic;
-        font-weight: 600;
-        line-height: 1.25;
+        font-size: 1.55rem;
+        font-weight: 400;
+        line-height: 1.3;
         color: var(--rose);
-        margin: 0 0 10px;
+        margin: 0 0 12px;
       }
 
       .card-right .message {
-        font-family: "Nunito", sans-serif;
-        font-size: 0.98rem;
-        font-weight: 600;
-        line-height: 1.55;
+        font-size: 1.2rem;
+        font-weight: 400;
+        line-height: 1.5;
         color: var(--ink);
-        margin: 0 0 16px;
-        white-space: normal;
+        margin: 0;
+        white-space: pre-wrap;
       }
 
       .card-right .signature {
-        font-family: "Cormorant Garamond", Georgia, serif;
-        font-size: 1.05rem;
-        font-style: italic;
-        font-weight: 600;
-        line-height: 1.3;
+        font-size: 1.15rem;
+        font-weight: 400;
+        line-height: 1.35;
         color: #9a6078;
-        margin: 12px 0 0 auto;
-        text-align: right;
+        margin: 18px 0 0;
+        text-align: left;
       }
 
       @media (max-width: 480px) {
@@ -763,16 +760,15 @@
         }
 
         .card-right {
-          padding: 20px 18px 16px;
+          padding: 22px 20px 18px;
         }
 
         .card-right .greeting {
-          font-size: 1.35rem;
+          font-size: 1.45rem;
         }
 
         .card-right .message {
-          font-size: 0.95rem;
-          line-height: 1.55;
+          font-size: 1.15rem;
         }
       }
 
@@ -997,53 +993,37 @@
 
       const templates = [
         (name, age, hobby) =>
-          `Museum label: "${name}, ${age}." Medium: human. Notable feature: can talk about ${hobby} until the lights go out. On loan from the Department of Excellent Taste. Do not tap the glass — just bring cake.`,
+          `Happy ${age}th birthday.\nMay this year be kind, a little silly, and full of ${hobby}.`,
         (name, age, hobby) =>
-          `Weather tonight: 100% chance of ${name}. High: ${age} years of accumulated charm. Overnight: scattered ${hobby}, heavy frosting, and a low chance of going to bed on time.`,
+          `${age} looks good on you.\nSave plenty of time for ${hobby} — and even more time for cake.`,
         (name, age, hobby) =>
-          `Recipe for ${name}: simmer ${age} years, fold in a reckless amount of ${hobby}, dust with glitter. Serves: everyone lucky enough to know you. Warning: extremely moreish.`,
+          `Another trip around the sun.\nSame wonderful you, plus one more year of ${hobby} and frosting.`,
         (name, age, hobby) =>
-          `Horoscope for ${name}: Mercury is in "who cares." Jupiter says skip the chores. Your rising sign is ${hobby}. Lucky number: ${age}. Lucky activity: being celebrated like a slightly chaotic saint.`,
+          `The plan is simple:\nblow out ${age} candles,\nmake room for ${hobby},\nthen ask for a second slice.`,
         (name, age, hobby) =>
-          `Coming soon to a living room near you: ${name}: The ${age}th Year. Runtime: unknown. Plot: our hero chooses ${hobby} over laundry. Critics call it "the feel-good sequel nobody knew they needed."`,
+          `You made it to ${age}.\nThat deserves applause, extra frosting, and a whole day of ${hobby}.`,
         (name, age, hobby) =>
-          `Customer review ★★★★★ — "${name} at ${age} is the deluxe edition. Extra ${hobby}, fewer dull meetings, cake included." Would celebrate again. Shipping: immediately, with balloons.`,
+          `Today we celebrate you —\n${age} years of heart, humor, and ${hobby}.`,
         (name, age, hobby) =>
-          `Lost & found: one ${name}, last seen turning ${age}. Identifying marks: suspiciously good at ${hobby} and unable to stop smiling. If found, return to the party with extra frosting.`,
+          `May your wishes come true,\nyour cake be ridiculous,\nand ${hobby} keep making you grin.`,
         (name, age, hobby) =>
-          `Official memo: ${name} is hereby promoted to ${age}. Benefits include cake, applause, and a legally binding excuse to do ${hobby} instead of email. Please initial the frosting.`,
+          `${age} candles, one wish,\nand all of us cheering you on.\nDon't forget ${hobby} later.`,
         (name, age, hobby) =>
-          `Sports desk: ${name} takes the ${age}th lap looking dangerously well-rested. Strategy: more ${hobby}, fewer serious faces. The crowd is throwing sprinkles. This is not a drill.`,
+          `Happy birthday.\nYou are ${age}, still you, and still making ${hobby} look like a superpower.`,
         (name, age, hobby) =>
-          `If ${hobby} were a country, ${name} would be the president, the parade, and the snack table. Constitution: turn ${age}, accept cake, decline boring conversations.`,
+          `A tiny to-do list:\n1) Blow out ${age} flames\n2) Hug your people\n3) Enjoy ${hobby}\n4) Leave one slice for tomorrow`,
         (name, age, hobby) =>
-          `Tiny field guide: the wild ${name} (${age}) is rare, festive, and most active near ${hobby}. Approach with cake. Do not mention "acting your age." It startles the species.`,
+          `Year ${age} starts now.\nOfficial activities: cake, laughing too loud, and ${hobby}.`,
         (name, age, hobby) =>
-          `${name}'s group chat just updated the year to ${age}. Suggested activities: ${hobby}, cake reconnaissance, and pretending to be responsible for exactly twelve minutes.`,
+          `You are not getting older.\nYou are collecting good years — this one is number ${age}, with ${hobby} on the side.`,
         (name, age, hobby) =>
-          `Congratulations, ${name}: you have unlocked "vintage but spicy." Special ability: turning ${hobby} into a personality. Cooldown: ${age} candles. Ultimate: asking for a second slice.`,
+          `Congratulations on ${age}.\nBenefits include cake, applause, and a perfect excuse to enjoy ${hobby}.`,
         (name, age, hobby) =>
-          `A short haiku for ${name}:\n${age} trips around the sun —\nstill choosing ${hobby} over chores.\nCake is the plot twist.`,
+          `Here's to ${age} trips around the sun —\nstill choosing ${hobby} over chores.\nCake is the plot twist.`,
         (name, age, hobby) =>
-          `Dear future historians: ${name} spent year ${age} doing ${hobby} with alarming joy. Please display this next to the cake crumbs. They were, as usual, intentional.`,
+          `Today's forecast: 100% chance of you.\nHigh: ${age} years of charm.\nOvernight: ${hobby} and leftover cake.`,
         (name, age, hobby) =>
-          `Plot twist: ${name} is not getting older. ${name} is collecting seasons like stamps and using ${hobby} as the glue. Today's stamp is number ${age} and it is slightly sparkly.`,
-        (name, age, hobby) =>
-          `Instruction manual: 1) Find ${name}. 2) Announce ${age}. 3) Interrupt with cake. 4) Ask about ${hobby} and settle in. 5) Repeat until the candles surrender.`,
-        (name, age, hobby) =>
-          `Breaking: local legend ${name} spotted at ${age}, still treating ${hobby} like a secret mission. Authorities recommend gifts, mischief, and a ridiculous amount of frosting.`,
-        (name, age, hobby) =>
-          `${name}, age ${age}, has filed a complaint against time. Demands: extra ${hobby}, fewer meetings, and cake that counts as dinner. The court (us) rules in your favor.`,
-        (name, age, hobby) =>
-          `Imagine a mixtape called "${name} at ${age}." Track 1: cake. Track 2: ${hobby}. Track 3: laughing too loud. Hidden track: you being secretly wonderful the whole time.`,
-        (name, age, hobby) =>
-          `If birthdays were sandwiches, ${name}'s would be ${age} layers of ${hobby} with a frosting roof. Messy. Delicious. Impossible to eat politely. Perfect.`,
-        (name, age, hobby) =>
-          `Rumor has it ${name} traded a boring year for ${age} extra sparkles and a lifetime ${hobby} pass. The deal is legally binding. Payment is cake. We accept sprinkles.`,
-        (name, age, hobby) =>
-          `To-do for ${name}: blow out ${age} flames, brag about ${hobby}, hug the people who get it, and leave one slice for tomorrow's slightly smug breakfast.`,
-        (name, age, hobby) =>
-          `${name} is ${age} going on "still has a scheme." Today's scheme: more ${hobby}, less pretending to enjoy small talk. Tomorrow's scheme: leftover cake for breakfast.`,
+          `Rumor has it you traded a boring year for ${age} extra sparkles.\nPayment is cake. We accept sprinkles. ${hobby} is encouraged.`,
       ];
 
       let lastTemplateIndex = -1;
@@ -1277,21 +1257,30 @@
       }
 
       function wrapCanvasText(ctx, text, maxWidth) {
-        const words = text.split(/\s+/);
         const lines = [];
-        let current = "";
 
-        for (const word of words) {
-          const test = current ? `${current} ${word}` : word;
-          if (ctx.measureText(test).width > maxWidth && current) {
-            lines.push(current);
-            current = word;
-          } else {
-            current = test;
+        for (const paragraph of text.split("\n")) {
+          if (!paragraph) {
+            lines.push("");
+            continue;
           }
+
+          const words = paragraph.split(/\s+/);
+          let current = "";
+
+          for (const word of words) {
+            const test = current ? `${current} ${word}` : word;
+            if (ctx.measureText(test).width > maxWidth && current) {
+              lines.push(current);
+              current = word;
+            } else {
+              current = test;
+            }
+          }
+
+          if (current) lines.push(current);
         }
 
-        if (current) lines.push(current);
         return lines;
       }
 
@@ -1450,7 +1439,7 @@
         const leftW = 500;
         const pad = 48;
         const measure = document.createElement("canvas").getContext("2d");
-        measure.font = "600 28px Nunito, sans-serif";
+        measure.font = "32px Patrick Hand, Segoe Print, cursive";
         const greeting = `Dear ${name},`;
         const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
         const sign = theme.sign;
@@ -1594,19 +1583,19 @@
         let ty = stripH + 56;
         ctx.textAlign = "left";
         ctx.fillStyle = p.greet;
-        ctx.font = "italic 600 40px Cormorant Garamond, Georgia, serif";
+        ctx.font = "36px Patrick Hand, Segoe Print, cursive";
         ctx.fillText(greeting, leftW + pad, ty);
-        ty += 52;
+        ty += 50;
 
         ctx.fillStyle = p.body;
-        ctx.font = "600 28px Nunito, sans-serif";
+        ctx.font = "32px Patrick Hand, Segoe Print, cursive";
         for (const line of bodyLines) {
           ctx.fillText(line, leftW + pad, ty);
-          ty += 40;
+          ty += 38;
         }
 
         ctx.fillStyle = p.sign;
-        ctx.font = "italic 600 26px Cormorant Garamond, Georgia, serif";
+        ctx.font = "30px Patrick Hand, Segoe Print, cursive";
         ctx.textAlign = "right";
         ctx.fillText(sign, width - pad, height - 40);
 
