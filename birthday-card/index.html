@@ -648,39 +648,70 @@
 
       const templates = [
         (name, age, hobby) =>
-          `Happy ${age}th, ${name}! They say age is just a number — yours is clearly the Wi-Fi password: strong, memorable, and occasionally needs a reset. May your year be filled with more ${hobby} than responsibilities!`,
+          `Museum label: "${name}, ${age}." Medium: human. Notable feature: can talk about ${hobby} until the lights go out. On loan from the Department of Excellent Taste. Do not tap the glass — just bring cake.`,
         (name, age, hobby) =>
-          `${name}, you're turning ${age} and still obsessed with ${hobby}? Respect. At this point, ${hobby} isn't a hobby — it's a lifestyle, a personality trait, and probably your retirement plan. Have the best birthday ever!`,
+          `Weather tonight: 100% chance of ${name}. High: ${age} years of accumulated charm. Overnight: scattered ${hobby}, heavy frosting, and a low chance of going to bed on time.`,
         (name, age, hobby) =>
-          `Dear ${name}, congrats on level ${age}! Your main quest this year: maximize ${hobby}, minimize adulting. Side quest: eat cake. You've got this, birthday legend!`,
+          `Recipe for ${name}: simmer ${age} years, fold in a reckless amount of ${hobby}, dust with glitter. Serves: everyone lucky enough to know you. Warning: extremely moreish.`,
         (name, age, hobby) =>
-          `${name} at ${age}? More like ${age} years of being awesome at ${hobby}! Scientists still can't explain how you make ${hobby} look that good. Wishing you cake, laughs, and zero boring moments!`,
+          `Horoscope for ${name}: Mercury is in "who cares." Jupiter says skip the chores. Your rising sign is ${hobby}. Lucky number: ${age}. Lucky activity: being celebrated like a slightly chaotic saint.`,
         (name, age, hobby) =>
-          `Happy Birthday, ${name}! ${age} candles means ${age} wishes, but let's be honest — you only need one: unlimited time for ${hobby}. May your cake be huge and your ${hobby} skills even huger!`,
+          `Coming soon to a living room near you: ${name}: The ${age}th Year. Runtime: unknown. Plot: our hero chooses ${hobby} over laundry. Critics call it "the feel-good sequel nobody knew they needed."`,
         (name, age, hobby) =>
-          `${name}, welcome to ${age}! You're not getting older, you're just becoming a more refined version of someone who loves ${hobby}. May your birthday be as epic as your ${hobby} stories!`,
+          `Customer review ★★★★★ — "${name} at ${age} is the deluxe edition. Extra ${hobby}, fewer dull meetings, cake included." Would celebrate again. Shipping: immediately, with balloons.`,
         (name, age, hobby) =>
-          `Roses are red, violets are blue, ${name} is ${age} and still crushing ${hobby} too! Here's to another year of being wonderfully, hilariously you. Party on!`,
+          `Lost & found: one ${name}, last seen turning ${age}. Identifying marks: suspiciously good at ${hobby} and unable to stop smiling. If found, return to the party with extra frosting.`,
         (name, age, hobby) =>
-          `Breaking news: ${name} turns ${age} today! Eyewitnesses report excessive ${hobby}, dangerous levels of fun, and cake consumption. Stay tuned for more birthday chaos!`,
+          `Official memo: ${name} is hereby promoted to ${age}. Benefits include cake, applause, and a legally binding excuse to do ${hobby} instead of email. Please initial the frosting.`,
+        (name, age, hobby) =>
+          `Sports desk: ${name} takes the ${age}th lap looking dangerously well-rested. Strategy: more ${hobby}, fewer serious faces. The crowd is throwing sprinkles. This is not a drill.`,
+        (name, age, hobby) =>
+          `If ${hobby} were a country, ${name} would be the president, the parade, and the snack table. Constitution: turn ${age}, accept cake, decline boring conversations.`,
+        (name, age, hobby) =>
+          `Tiny field guide: the wild ${name} (${age}) is rare, festive, and most active near ${hobby}. Approach with cake. Do not mention "acting your age." It startles the species.`,
+        (name, age, hobby) =>
+          `${name}'s group chat just updated the year to ${age}. Suggested activities: ${hobby}, cake reconnaissance, and pretending to be responsible for exactly twelve minutes.`,
+        (name, age, hobby) =>
+          `Congratulations, ${name}: you have unlocked "vintage but spicy." Special ability: turning ${hobby} into a personality. Cooldown: ${age} candles. Ultimate: asking for a second slice.`,
+        (name, age, hobby) =>
+          `A short haiku for ${name}:\n${age} trips around the sun —\nstill choosing ${hobby} over chores.\nCake is the plot twist.`,
+        (name, age, hobby) =>
+          `Dear future historians: ${name} spent year ${age} doing ${hobby} with alarming joy. Please display this next to the cake crumbs. They were, as usual, intentional.`,
+        (name, age, hobby) =>
+          `Plot twist: ${name} is not getting older. ${name} is collecting seasons like stamps and using ${hobby} as the glue. Today's stamp is number ${age} and it is slightly sparkly.`,
+        (name, age, hobby) =>
+          `Instruction manual: 1) Find ${name}. 2) Announce ${age}. 3) Interrupt with cake. 4) Ask about ${hobby} and settle in. 5) Repeat until the candles surrender.`,
+        (name, age, hobby) =>
+          `Breaking: local legend ${name} spotted at ${age}, still treating ${hobby} like a secret mission. Authorities recommend gifts, mischief, and a ridiculous amount of frosting.`,
+        (name, age, hobby) =>
+          `${name}, age ${age}, has filed a complaint against time. Demands: extra ${hobby}, fewer meetings, and cake that counts as dinner. The court (us) rules in your favor.`,
+        (name, age, hobby) =>
+          `Imagine a mixtape called "${name} at ${age}." Track 1: cake. Track 2: ${hobby}. Track 3: laughing too loud. Hidden track: you being secretly wonderful the whole time.`,
+        (name, age, hobby) =>
+          `If birthdays were sandwiches, ${name}'s would be ${age} layers of ${hobby} with a frosting roof. Messy. Delicious. Impossible to eat politely. Perfect.`,
+        (name, age, hobby) =>
+          `Rumor has it ${name} traded a boring year for ${age} extra sparkles and a lifetime ${hobby} pass. The deal is legally binding. Payment is cake. We accept sprinkles.`,
+        (name, age, hobby) =>
+          `To-do for ${name}: blow out ${age} flames, brag about ${hobby}, hug the people who get it, and leave one slice for tomorrow's slightly smug breakfast.`,
+        (name, age, hobby) =>
+          `${name} is ${age} going on "still has a scheme." Today's scheme: more ${hobby}, less pretending to enjoy small talk. Tomorrow's scheme: leftover cake for breakfast.`,
       ];
+
+      let lastTemplateIndex = -1;
 
       function pickRandom(list) {
         return list[Math.floor(Math.random() * list.length)];
       }
 
       function generateMessage(name, age, hobby) {
-        const idx = Math.abs(hashCode(name + age + hobby + Date.now())) % templates.length;
-        return templates[idx](name, age, hobby);
-      }
-
-      function hashCode(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-          hash = (hash << 5) - hash + str.charCodeAt(i);
-          hash |= 0;
+        let idx = Math.floor(Math.random() * templates.length);
+        if (templates.length > 1) {
+          while (idx === lastTemplateIndex) {
+            idx = Math.floor(Math.random() * templates.length);
+          }
         }
-        return hash;
+        lastTemplateIndex = idx;
+        return templates[idx](name, age, hobby);
       }
 
       function formatCardText(name, age, message) {
