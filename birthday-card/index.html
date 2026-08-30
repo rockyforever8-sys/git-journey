@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Nunito:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -38,7 +38,8 @@
         overflow-x: hidden;
       }
 
-      .confetti {
+      .confetti,
+      .burst-confetti {
         position: fixed;
         inset: 0;
         pointer-events: none;
@@ -46,22 +47,76 @@
         z-index: 0;
       }
 
-      .confetti span {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        border-radius: 2px;
-        opacity: 0.5;
-        animation: drift 12s linear infinite;
+      .burst-confetti {
+        z-index: 50;
       }
 
-      @keyframes drift {
+      .confetti span,
+      .burst-confetti i {
+        position: absolute;
+        top: -12vh;
+        width: 8px;
+        height: 12px;
+        border-radius: 1px;
+        opacity: 0.75;
+        animation: fall-sway linear infinite;
+      }
+
+      .confetti span.round,
+      .burst-confetti i.round {
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+      }
+
+      .confetti span.ribbon,
+      .burst-confetti i.ribbon {
+        width: 4px;
+        height: 14px;
+        border-radius: 2px;
+      }
+
+      @keyframes fall-sway {
         0% {
-          transform: translateY(-10vh) rotate(0deg);
+          transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate3d(18px, 30vh, 0) rotate(180deg);
+        }
+        50% {
+          transform: translate3d(-12px, 60vh, 0) rotate(360deg);
+        }
+        75% {
+          transform: translate3d(14px, 90vh, 0) rotate(540deg);
         }
         100% {
-          transform: translateY(110vh) rotate(720deg);
+          transform: translate3d(-8px, 120vh, 0) rotate(720deg);
         }
+      }
+
+      @keyframes foil-shift {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+      }
+
+      @keyframes shine-sweep {
+        0% { transform: translateX(-140%); }
+        55%, 100% { transform: translateX(140%); }
+      }
+
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.35; transform: scale(0.85); }
+        50% { opacity: 1; transform: scale(1.15); }
+      }
+
+      @keyframes balloon-float {
+        0%, 100% { translate: 0 0; }
+        50% { translate: 0 -7px; }
+      }
+
+      @keyframes streamer-sway {
+        0%, 100% { transform: rotate(-8deg); }
+        50% { transform: rotate(10deg); }
       }
 
       @keyframes bounce-in {
@@ -132,7 +187,7 @@
       }
 
       .fun-title {
-        font-family: "Pacifico", cursive;
+        font-family: "Great Vibes", cursive;
         font-size: clamp(2.2rem, 6vw, 3.8rem);
         font-weight: 400;
         margin: 0 0 10px;
@@ -271,16 +326,28 @@
         min-height: 380px;
         display: grid;
         grid-template-columns: 42% 1fr;
-        border-radius: 10px;
+        border-radius: 14px;
         overflow: hidden;
         box-shadow:
-          0 2px 0 #f0d4c8,
-          0 20px 50px rgba(74, 25, 66, 0.22),
-          inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+          0 1px 0 #f4e4b2,
+          0 0 0 3px #d4af37,
+          0 0 0 5px #fff8e7,
+          0 22px 50px rgba(74, 25, 66, 0.22);
         background: var(--paper);
         position: relative;
         --fold: rgba(201, 24, 74, 0.2);
         --ink-soft: #9a6078;
+      }
+
+      .card-interior::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border: 1px solid rgba(212, 175, 55, 0.45);
+        border-radius: 8px;
+        pointer-events: none;
+        z-index: 4;
+        box-shadow: inset 0 0 24px rgba(212, 175, 55, 0.08);
       }
 
       .card-interior::before {
@@ -386,7 +453,10 @@
         width: 28px;
         height: 36px;
         border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
-        box-shadow: inset -6px -4px 0 rgba(0, 0, 0, 0.08);
+        box-shadow:
+          inset -6px -4px 0 rgba(0, 0, 0, 0.08),
+          inset 5px 6px 0 rgba(255, 255, 255, 0.28);
+        animation: balloon-float 3.2s ease-in-out infinite;
       }
 
       .balloon::after {
@@ -409,8 +479,9 @@
         position: absolute;
         width: 10px;
         height: 10px;
-        background: #ffe566;
+        background: radial-gradient(circle at 30% 30%, #fff, #ffe566);
         clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        animation: twinkle 2.2s ease-in-out infinite;
       }
 
       .deco-moon {
@@ -430,11 +501,13 @@
         width: 8px;
         height: 54px;
         border-radius: 0 0 8px 8px;
+        transform-origin: top center;
+        animation: streamer-sway 2.4s ease-in-out infinite;
       }
 
-      .streamer.s1 { left: 18%; background: #e71d36; transform: rotate(-8deg); }
-      .streamer.s2 { left: 46%; background: #ff9f1c; transform: rotate(6deg); }
-      .streamer.s3 { left: 72%; background: #0077b6; transform: rotate(-4deg); }
+      .streamer.s1 { left: 18%; background: linear-gradient(#e71d36, #ff8fa3); animation-delay: 0s; }
+      .streamer.s2 { left: 46%; background: linear-gradient(#ff9f1c, #ffe08a); animation-delay: 0.3s; }
+      .streamer.s3 { left: 72%; background: linear-gradient(#0077b6, #90e0ef); animation-delay: 0.6s; }
 
       .card-confetti {
         position: absolute;
@@ -460,15 +533,31 @@
 
       .card-left .party-banner {
         margin: 0 0 2px;
-        padding: 4px 14px;
+        padding: 5px 16px;
         border-radius: 999px;
-        background: linear-gradient(90deg, #ffb703, #fb8500);
-        color: #fff;
-        font-size: 0.62rem;
-        font-weight: 800;
-        letter-spacing: 0.16em;
+        background: linear-gradient(120deg, #d4af37, #fff1b8, #c9a227, #ffe08a, #d4af37);
+        background-size: 220% 220%;
+        animation: foil-shift 3.5s linear infinite;
+        color: #5c3d00;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        box-shadow: 0 3px 8px rgba(251, 133, 0, 0.35);
+        box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-left .party-banner::after,
+      .card-left .age-badge::after,
+      .card-ribbon::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%);
+        animation: shine-sweep 2.8s ease-in-out infinite;
+        pointer-events: none;
       }
 
       .card-left .art-row {
@@ -496,8 +585,9 @@
 
       .card-left .vibe-text {
         margin: 0;
-        font-size: 0.62rem;
-        font-weight: 800;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.72rem;
+        font-weight: 600;
         letter-spacing: 0.22em;
         text-transform: uppercase;
         color: #c9184a;
@@ -507,11 +597,15 @@
         min-width: 92px;
         padding: 8px 14px 6px;
         border-radius: 999px;
-        background: linear-gradient(135deg, #c9184a, #ff4d6d);
+        background: linear-gradient(120deg, #c9184a, #ff8fab, #c9184a, #ff4d6d);
+        background-size: 220% 220%;
+        animation: foil-shift 3.8s linear infinite;
         color: #fff;
         text-align: center;
-        box-shadow: 0 6px 14px rgba(201, 24, 74, 0.35);
+        box-shadow: 0 6px 16px rgba(201, 24, 74, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
         margin-top: 2px;
+        position: relative;
+        overflow: hidden;
       }
 
       .card-left .age-display {
@@ -544,9 +638,9 @@
       }
 
       .card-right .greeting {
-        font-family: "Caveat", cursive;
-        font-size: 1.55rem;
-        font-weight: 700;
+        font-family: "Great Vibes", cursive;
+        font-size: 1.85rem;
+        font-weight: 400;
         color: var(--rose);
         margin: 0 0 10px;
       }
@@ -573,17 +667,39 @@
         position: absolute;
         top: -6px;
         right: 20px;
-        background: linear-gradient(135deg, var(--gold), var(--rose-light));
-        color: #fff;
-        font-size: 0.7rem;
-        font-weight: 800;
+        background: linear-gradient(120deg, #d4af37, #fff1b8, #c9a227, #ffe08a, #d4af37);
+        background-size: 220% 220%;
+        animation: foil-shift 3.2s linear infinite;
+        color: #5c3d00;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.72rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        padding: 6px 12px;
+        letter-spacing: 0.1em;
+        padding: 7px 14px;
         border-radius: 0 0 10px 10px;
-        box-shadow: 0 4px 12px rgba(201, 24, 74, 0.35);
-        z-index: 3;
+        box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+        z-index: 5;
+        overflow: hidden;
       }
+
+      .flourish {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        z-index: 5;
+        opacity: 0.7;
+        background:
+          radial-gradient(circle at 30% 30%, #fff8dc, transparent 40%),
+          conic-gradient(from 40deg, #d4af37, #fff1b8, #c9a227, #d4af37);
+        clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+        animation: twinkle 3s ease-in-out infinite;
+      }
+
+      .flourish.tl { top: 10px; left: 10px; }
+      .flourish.tr { top: 10px; right: 10px; }
+      .flourish.bl { bottom: 10px; left: 10px; }
+      .flourish.br { bottom: 10px; right: 10px; }
 
       .card-actions {
         display: grid;
@@ -655,6 +771,7 @@
   </head>
   <body>
     <div class="confetti" aria-hidden="true" id="confetti"></div>
+    <div class="burst-confetti" aria-hidden="true" id="burst-confetti"></div>
 
     <div class="page">
       <header>
@@ -701,15 +818,34 @@
       const colors = ["#ff4d6d", "#ffb703", "#c9184a", "#fb8500", "#e07a5f", "#2a9d8f"];
       const confettiEl = document.getElementById("confetti");
 
-      for (let i = 0; i < 40; i++) {
+      const shapes = ["", "round", "ribbon"];
+      for (let i = 0; i < 70; i++) {
         const piece = document.createElement("span");
+        const shape = shapes[i % 3];
+        if (shape) piece.className = shape;
         piece.style.left = Math.random() * 100 + "%";
         piece.style.background = colors[i % colors.length];
-        piece.style.animationDelay = Math.random() * 12 + "s";
-        piece.style.animationDuration = 8 + Math.random() * 10 + "s";
-        piece.style.width = 6 + Math.random() * 8 + "px";
-        piece.style.height = piece.style.width;
+        piece.style.animationDelay = `${-Math.random() * 12}s`;
+        piece.style.animationDuration = `${7 + Math.random() * 8}s`;
         confettiEl.appendChild(piece);
+      }
+
+      function burstConfetti() {
+        const layer = document.getElementById("burst-confetti");
+        layer.innerHTML = "";
+        for (let i = 0; i < 48; i++) {
+          const piece = document.createElement("i");
+          const shape = shapes[i % 3];
+          if (shape) piece.className = shape;
+          piece.style.left = Math.random() * 100 + "%";
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDuration = `${2.2 + Math.random() * 2.2}s`;
+          piece.style.animationDelay = `${Math.random() * 0.25}s`;
+          layer.appendChild(piece);
+        }
+        setTimeout(() => {
+          layer.innerHTML = "";
+        }, 4800);
       }
 
       const luckyNames = [
@@ -1313,6 +1449,24 @@
         ctx.textAlign = "right";
         ctx.fillText(sign, width - pad, height - 40);
 
+        ctx.strokeStyle = "#d4af37";
+        ctx.lineWidth = 10;
+        ctx.strokeRect(8, 8, width - 16, height - 16);
+        ctx.strokeStyle = "#fff8e7";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(18, 18, width - 36, height - 36);
+        ctx.strokeStyle = "rgba(212, 175, 55, 0.55)";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(28, 28, width - 56, height - 56);
+
+        const sheen = ctx.createLinearGradient(0, 0, width, height);
+        sheen.addColorStop(0.35, "rgba(255,255,255,0)");
+        sheen.addColorStop(0.48, "rgba(255,255,255,0.16)");
+        sheen.addColorStop(0.52, "rgba(255,241,184,0.12)");
+        sheen.addColorStop(0.65, "rgba(255,255,255,0)");
+        ctx.fillStyle = sheen;
+        ctx.fillRect(0, 0, width, height);
+
         return canvas;
       }
 
@@ -1338,6 +1492,10 @@
           <div class="card-stage">
             <div class="birthday-card">
               <div class="card-interior theme-${theme.id}">
+                <span class="flourish tl" aria-hidden="true"></span>
+                <span class="flourish tr" aria-hidden="true"></span>
+                <span class="flourish bl" aria-hidden="true"></span>
+                <span class="flourish br" aria-hidden="true"></span>
                 <span class="card-ribbon">${escapeHtml(theme.ribbon)}</span>
                 <div class="card-left">
                   ${leftPanelHtml(age, theme)}
@@ -1474,6 +1632,7 @@
         emptyState.hidden = true;
         cardsStack.hidden = false;
         cardsStack.prepend(card);
+        burstConfetti();
       }
 
       const form = document.getElementById("card-form");
