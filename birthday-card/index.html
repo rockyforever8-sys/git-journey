@@ -31,11 +31,30 @@
         min-height: 100vh;
         font-family: "Nunito", sans-serif;
         color: var(--ink);
-        background:
-          radial-gradient(circle at 10% 15%, rgba(255, 77, 109, 0.18), transparent 35%),
-          radial-gradient(circle at 90% 80%, rgba(255, 183, 3, 0.15), transparent 30%),
-          linear-gradient(160deg, #fff0f3 0%, #fff8f0 40%, #ffe5ec 100%);
+        background-color: #fff0f3;
         overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          url("images/family-portrait.jpg") center 28% / cover no-repeat;
+        filter: saturate(0.85) brightness(0.92);
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(circle at 12% 18%, rgba(255, 77, 109, 0.12), transparent 32%),
+          radial-gradient(circle at 88% 80%, rgba(255, 183, 3, 0.1), transparent 28%),
+          linear-gradient(160deg, rgba(255, 240, 243, 0.78) 0%, rgba(255, 248, 240, 0.74) 42%, rgba(255, 229, 236, 0.8) 100%);
+        pointer-events: none;
       }
 
       .confetti,
@@ -44,7 +63,7 @@
         inset: 0;
         pointer-events: none;
         overflow: hidden;
-        z-index: 0;
+        z-index: 1;
       }
 
       .burst-confetti {
@@ -164,7 +183,7 @@
 
       .page {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         max-width: 1200px;
         margin: 0 auto;
         padding: 32px 24px 48px;
@@ -222,7 +241,7 @@
       }
 
       .panel {
-        background: rgba(255, 255, 255, 0.82);
+        background: rgba(255, 255, 255, 0.88);
         backdrop-filter: blur(12px);
         border: 2px solid rgba(255, 255, 255, 0.95);
         border-radius: 24px;
