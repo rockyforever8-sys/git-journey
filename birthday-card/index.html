@@ -13,15 +13,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
       :root {
-        --pink: #ff6b9d;
-        --gold: #ffd166;
-        --purple: #9b5de5;
-        --teal: #00bbf9;
-        --coral: #ff8c69;
+        --rose: #c9184a;
+        --rose-light: #ff4d6d;
+        --blush: #fff0f3;
+        --gold: #ffb703;
         --cream: #fff8f0;
-        --paper: #fffdf7;
-        --ink: #3d2c4d;
-        --shadow: rgba(61, 44, 77, 0.15);
+        --paper: #fffdf9;
+        --ink: #4a1942;
+        --shadow: rgba(74, 25, 66, 0.18);
       }
 
       * {
@@ -33,7 +32,10 @@
         min-height: 100vh;
         font-family: "Nunito", sans-serif;
         color: var(--ink);
-        background: linear-gradient(135deg, #ffeef5 0%, #fff4e6 35%, #f0e8ff 70%, #e8f8ff 100%);
+        background:
+          radial-gradient(circle at 10% 15%, rgba(255, 77, 109, 0.18), transparent 35%),
+          radial-gradient(circle at 90% 80%, rgba(255, 183, 3, 0.15), transparent 30%),
+          linear-gradient(160deg, #fff0f3 0%, #fff8f0 40%, #ffe5ec 100%);
         overflow-x: hidden;
       }
 
@@ -50,7 +52,7 @@
         width: 10px;
         height: 10px;
         border-radius: 2px;
-        opacity: 0.55;
+        opacity: 0.5;
         animation: drift 12s linear infinite;
       }
 
@@ -96,6 +98,16 @@
         }
       }
 
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+
       .page {
         position: relative;
         z-index: 1;
@@ -109,39 +121,47 @@
         margin-bottom: 36px;
       }
 
-      .title-emoji {
-        display: block;
-        font-size: 2.4rem;
-        margin-bottom: 4px;
-        animation: wiggle 2.5s ease-in-out infinite;
+      .hero-images {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 12px;
+      }
+
+      .hero-images img {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 8px 24px var(--shadow);
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .hero-images img:last-child {
+        animation-delay: 1.5s;
       }
 
       .fun-title {
         font-family: "Pacifico", cursive;
-        font-size: clamp(2.4rem, 6vw, 4rem);
+        font-size: clamp(2.2rem, 6vw, 3.8rem);
         font-weight: 400;
         margin: 0 0 10px;
         line-height: 1.15;
-        background: linear-gradient(
-          90deg,
-          var(--pink),
-          var(--gold),
-          var(--purple),
-          var(--teal),
-          var(--pink)
-        );
+        background: linear-gradient(90deg, var(--rose), var(--gold), var(--rose-light), var(--rose));
         background-size: 200% auto;
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
         animation: shimmer 4s linear infinite;
-        filter: drop-shadow(0 2px 8px rgba(155, 93, 229, 0.25));
+        filter: drop-shadow(0 2px 8px rgba(201, 24, 74, 0.2));
       }
 
       .subtitle {
         margin: 0;
-        font-size: 1.1rem;
-        color: #6b5b7a;
+        font-size: 1.05rem;
+        color: #8b5a7a;
         font-weight: 600;
       }
 
@@ -159,9 +179,9 @@
       }
 
       .panel {
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(255, 255, 255, 0.95);
         border-radius: 24px;
         padding: 28px;
         box-shadow: 0 16px 48px var(--shadow);
@@ -171,7 +191,7 @@
         margin: 0 0 20px;
         font-size: 1.35rem;
         font-weight: 800;
-        color: var(--purple);
+        color: var(--rose);
       }
 
       .field {
@@ -188,7 +208,7 @@
       input {
         width: 100%;
         padding: 14px 16px;
-        border: 2px solid #e8dff0;
+        border: 2px solid #f5d0d9;
         border-radius: 14px;
         font: inherit;
         font-size: 1rem;
@@ -198,8 +218,8 @@
 
       input:focus {
         outline: none;
-        border-color: var(--pink);
-        box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
+        border-color: var(--rose-light);
+        box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.18);
       }
 
       button {
@@ -213,18 +233,27 @@
         font-weight: 800;
         color: #fff;
         cursor: pointer;
-        background: linear-gradient(135deg, var(--pink), var(--purple));
-        box-shadow: 0 8px 24px rgba(155, 93, 229, 0.35);
+        background: linear-gradient(135deg, var(--rose-light), var(--rose));
+        box-shadow: 0 8px 24px rgba(201, 24, 74, 0.3);
         transition: transform 0.15s, box-shadow 0.15s;
       }
 
       button:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(155, 93, 229, 0.45);
+        box-shadow: 0 12px 28px rgba(201, 24, 74, 0.4);
       }
 
       button:active:not(:disabled) {
         transform: translateY(0);
+      }
+
+      .lucky-btn {
+        background: linear-gradient(135deg, var(--gold), #fb8500);
+        box-shadow: 0 8px 24px rgba(255, 183, 3, 0.35);
+      }
+
+      .lucky-btn:hover:not(:disabled) {
+        box-shadow: 0 12px 28px rgba(255, 183, 3, 0.45);
       }
 
       .cards-stack {
@@ -255,12 +284,12 @@
         height: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
         box-shadow:
-          0 2px 0 #e8dcc8,
-          0 20px 50px rgba(61, 44, 77, 0.22),
-          inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+          0 2px 0 #f0d4c8,
+          0 20px 50px rgba(74, 25, 66, 0.22),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.7);
         background: var(--paper);
         position: relative;
       }
@@ -275,8 +304,8 @@
         background: linear-gradient(
           to bottom,
           transparent,
-          rgba(200, 180, 150, 0.5) 15%,
-          rgba(200, 180, 150, 0.5) 85%,
+          rgba(201, 24, 74, 0.2) 15%,
+          rgba(201, 24, 74, 0.2) 85%,
           transparent
         );
         transform: translateX(-50%);
@@ -286,49 +315,60 @@
 
       .card-left,
       .card-right {
-        padding: 28px 24px;
+        padding: 20px 18px;
         position: relative;
       }
 
       .card-left {
         background:
-          radial-gradient(circle at 30% 25%, rgba(255, 209, 102, 0.25), transparent 45%),
-          radial-gradient(circle at 70% 75%, rgba(255, 107, 157, 0.15), transparent 40%),
+          radial-gradient(circle at 30% 20%, rgba(255, 183, 3, 0.2), transparent 50%),
+          radial-gradient(circle at 70% 80%, rgba(201, 24, 74, 0.12), transparent 45%),
           var(--cream);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-right: 1px solid rgba(200, 180, 150, 0.35);
+        border-right: 1px solid rgba(201, 24, 74, 0.15);
+        gap: 8px;
       }
 
-      .card-left .balloons {
-        font-size: 2.8rem;
-        line-height: 1;
-        margin-bottom: 12px;
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      .card-photos {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card-photos img {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 12px rgba(74, 25, 66, 0.15);
       }
 
       .card-left .age-display {
         font-family: "Caveat", cursive;
-        font-size: 2.4rem;
+        font-size: 2.6rem;
         font-weight: 700;
-        color: var(--purple);
-        margin: 0;
+        color: var(--rose);
+        margin: 4px 0 0;
+        line-height: 1;
       }
 
       .card-left .age-label {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.12em;
-        color: #9a8aa8;
-        margin-top: 4px;
+        color: #b07a8f;
+        margin: 0;
       }
 
       .card-right {
         background:
-          linear-gradient(160deg, rgba(255, 255, 255, 0.5), transparent 50%),
+          linear-gradient(160deg, rgba(255, 240, 243, 0.6), transparent 55%),
           var(--paper);
         display: flex;
         flex-direction: column;
@@ -337,25 +377,25 @@
 
       .card-right .greeting {
         font-family: "Caveat", cursive;
-        font-size: 1.6rem;
+        font-size: 1.55rem;
         font-weight: 700;
-        color: var(--pink);
-        margin: 0 0 12px;
+        color: var(--rose);
+        margin: 0 0 10px;
       }
 
       .card-right .message {
         font-family: "Caveat", cursive;
-        font-size: 1.35rem;
-        line-height: 1.55;
+        font-size: 1.25rem;
+        line-height: 1.5;
         color: var(--ink);
-        margin: 0 0 20px;
-        min-height: 100px;
+        margin: 0 0 16px;
+        min-height: 90px;
       }
 
       .card-right .signature {
         font-family: "Caveat", cursive;
-        font-size: 1.2rem;
-        color: #7a6b88;
+        font-size: 1.15rem;
+        color: #9a6078;
         margin: 0;
         text-align: right;
       }
@@ -363,28 +403,43 @@
       .card-ribbon {
         position: absolute;
         top: -6px;
-        right: 24px;
-        background: linear-gradient(135deg, var(--gold), var(--coral));
+        right: 20px;
+        background: linear-gradient(135deg, var(--gold), var(--rose-light));
         color: #fff;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        padding: 6px 14px;
+        padding: 6px 12px;
         border-radius: 0 0 10px 10px;
-        box-shadow: 0 4px 12px rgba(255, 140, 105, 0.4);
+        box-shadow: 0 4px 12px rgba(201, 24, 74, 0.35);
         z-index: 3;
       }
 
-      .copy-btn {
+      .card-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
         margin-top: 12px;
-        background: linear-gradient(135deg, var(--teal), #00a896);
-        box-shadow: 0 8px 24px rgba(0, 187, 249, 0.3);
-        font-size: 0.95rem;
-        padding: 12px 16px;
       }
 
-      .copy-btn:disabled {
+      .card-actions button {
+        margin-top: 0;
+        font-size: 0.88rem;
+        padding: 12px 10px;
+      }
+
+      .save-btn {
+        background: linear-gradient(135deg, #2a9d8f, #1d7a6f);
+        box-shadow: 0 8px 20px rgba(42, 157, 143, 0.3);
+      }
+
+      .copy-btn {
+        background: linear-gradient(135deg, #e07a5f, var(--rose));
+        box-shadow: 0 8px 20px rgba(224, 122, 95, 0.3);
+      }
+
+      .card-actions button:disabled {
         opacity: 0.6;
         cursor: wait;
         transform: none;
@@ -393,14 +448,25 @@
       .empty-state {
         text-align: center;
         padding: 48px 24px;
-        color: #9a8aa8;
+        color: #b07a8f;
         font-weight: 600;
         line-height: 1.6;
       }
 
       .empty-state .empty-icon {
-        font-size: 3rem;
-        margin-bottom: 12px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .empty-state .empty-icon img {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 6px 16px var(--shadow);
       }
 
       .toast {
@@ -418,6 +484,8 @@
         transition: transform 0.3s, opacity 0.3s;
         z-index: 100;
         pointer-events: none;
+        max-width: 90vw;
+        text-align: center;
       }
 
       .toast.show {
@@ -431,9 +499,24 @@
 
     <div class="page">
       <header>
-        <span class="title-emoji" aria-hidden="true">🎈🎂✨</span>
+        <div class="hero-images" aria-hidden="true">
+          <img
+            src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&h=200&fit=crop&q=80"
+            alt=""
+            width="72"
+            height="72"
+            crossorigin="anonymous"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop&q=80"
+            alt=""
+            width="72"
+            height="72"
+            crossorigin="anonymous"
+          />
+        </div>
         <h1 class="fun-title">Wit &amp; Wishes Card Factory</h1>
-        <p class="subtitle">Turn name, age &amp; hobby into hilariously heartfelt birthday cards</p>
+        <p class="subtitle">Cake, roses &amp; laughs — birthday cards with serious good vibes</p>
       </header>
 
       <div class="layout">
@@ -453,13 +536,29 @@
               <input id="hobby" name="hobby" type="text" placeholder="e.g. baking, hiking, gaming" required />
             </div>
             <button type="submit">Generate Funny Message</button>
+            <button type="button" class="lucky-btn" id="lucky-btn">I'm Feeling Lucky</button>
           </form>
         </section>
 
         <section class="panel">
           <h2>Your cards</h2>
           <div id="empty-state" class="empty-state">
-            <div class="empty-icon" aria-hidden="true">💌</div>
+            <div class="empty-icon" aria-hidden="true">
+              <img
+                src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=120&h=120&fit=crop&q=80"
+                alt=""
+                width="56"
+                height="56"
+                crossorigin="anonymous"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=120&h=120&fit=crop&q=80"
+                alt=""
+                width="56"
+                height="56"
+                crossorigin="anonymous"
+              />
+            </div>
             <p>Fill in the details and hit Generate — your cards will stack up here!</p>
           </div>
           <div id="cards-stack" class="cards-stack" hidden></div>
@@ -467,10 +566,15 @@
       </div>
     </div>
 
-    <div class="toast" id="toast" role="status">Card copied!</div>
+    <div class="toast" id="toast" role="status">Card saved!</div>
 
     <script>
-      const colors = ["#ff6b9d", "#ffd166", "#9b5de5", "#00bbf9", "#ff8c69", "#06d6a0"];
+      const CAKE_IMG =
+        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&h=200&fit=crop&q=80";
+      const ROSE_IMG =
+        "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop&q=80";
+
+      const colors = ["#ff4d6d", "#ffb703", "#c9184a", "#fb8500", "#e07a5f", "#2a9d8f"];
       const confettiEl = document.getElementById("confetti");
 
       for (let i = 0; i < 40; i++) {
@@ -483,6 +587,36 @@
         piece.style.height = piece.style.width;
         confettiEl.appendChild(piece);
       }
+
+      const luckyNames = [
+        "Alex",
+        "Sam",
+        "Jordan",
+        "Riley",
+        "Morgan",
+        "Casey",
+        "Jamie",
+        "Taylor",
+        "Quinn",
+        "Avery",
+        "Charlie",
+        "Drew",
+      ];
+
+      const luckyHobbies = [
+        "gaming",
+        "baking",
+        "hiking",
+        "painting",
+        "dancing",
+        "photography",
+        "gardening",
+        "yoga",
+        "reading",
+        "cooking",
+        "cycling",
+        "karaoke",
+      ];
 
       const templates = [
         (name, age, hobby) =>
@@ -503,6 +637,10 @@
           `Breaking news: ${name} turns ${age} today! Eyewitnesses report excessive ${hobby}, dangerous levels of fun, and cake consumption. Stay tuned for more birthday chaos!`,
       ];
 
+      function pickRandom(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
       function generateMessage(name, age, hobby) {
         const idx = Math.abs(hashCode(name + age + hobby + Date.now())) % templates.length;
         return templates[idx](name, age, hobby);
@@ -519,7 +657,7 @@
 
       function formatCardText(name, age, message) {
         return [
-          "🎂 Happy Birthday! 🎂",
+          "Happy Birthday!",
           "",
           `Dear ${name},`,
           "",
@@ -527,8 +665,33 @@
           "",
           `${age} years young!`,
           "",
-          "With love & laughter ✨",
+          "With love, cake & roses",
         ].join("\n");
+      }
+
+      async function renderCardImage(cardInterior) {
+        const canvas = await html2canvas(cardInterior, {
+          backgroundColor: "#fffdf9",
+          scale: 2,
+          useCORS: true,
+          logging: false,
+        });
+
+        return new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Failed to create image"));
+          }, "image/png");
+        });
+      }
+
+      function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
       }
 
       function createCardElement(name, age, message) {
@@ -541,22 +704,30 @@
               <div class="card-interior">
                 <span class="card-ribbon">Happy Birthday!</span>
                 <div class="card-left">
-                  <div class="balloons" aria-hidden="true">🎈🎂🎉</div>
+                  <div class="card-photos" aria-hidden="true">
+                    <img src="${CAKE_IMG}" alt="" width="64" height="64" crossorigin="anonymous" />
+                    <img src="${ROSE_IMG}" alt="" width="64" height="64" crossorigin="anonymous" />
+                  </div>
                   <p class="age-display">${age}</p>
                   <p class="age-label">years young</p>
                 </div>
                 <div class="card-right">
                   <p class="greeting">Dear ${escapeHtml(name)},</p>
                   <p class="message">${escapeHtml(message)}</p>
-                  <p class="signature">With love &amp; laughter ✨</p>
+                  <p class="signature">With love, cake &amp; roses</p>
                 </div>
               </div>
             </div>
           </div>
-          <button type="button" class="copy-btn">Copy card &amp; message</button>
+          <div class="card-actions">
+            <button type="button" class="save-btn">Save card to Messages</button>
+            <button type="button" class="copy-btn">Copy card &amp; message</button>
+          </div>
         `;
 
+        const saveBtn = item.querySelector(".save-btn");
         const copyBtn = item.querySelector(".copy-btn");
+        saveBtn.addEventListener("click", () => saveCardToMessages(item, name, age, message, saveBtn));
         copyBtn.addEventListener("click", () => copyCard(item, name, age, message, copyBtn));
 
         return item;
@@ -568,6 +739,49 @@
         return div.innerHTML;
       }
 
+      async function saveCardToMessages(item, name, age, message, button) {
+        const cardInterior = item.querySelector(".card-interior");
+        const text = formatCardText(name, age, message);
+        const filename = `birthday-card-${name.toLowerCase().replace(/\s+/g, "-")}.png`;
+
+        button.disabled = true;
+        button.textContent = "Saving…";
+
+        try {
+          const imageBlob = await renderCardImage(cardInterior);
+          const file = new File([imageBlob], filename, { type: "image/png" });
+
+          if (navigator.share) {
+            const shareData = {
+              title: `Happy Birthday, ${name}!`,
+              text,
+              files: [file],
+            };
+
+            if (!navigator.canShare || navigator.canShare(shareData)) {
+              await navigator.share(shareData);
+              showToast("Card ready — pick Messages to send!");
+              return;
+            }
+          }
+
+          downloadBlob(imageBlob, filename);
+          showToast("Card saved! Open Photos, then share to Messages.");
+        } catch (err) {
+          if (err?.name === "AbortError") return;
+          try {
+            const imageBlob = await renderCardImage(cardInterior);
+            downloadBlob(imageBlob, filename);
+            showToast("Card downloaded — share it from your Photos app!");
+          } catch {
+            showToast("Could not save card — try again");
+          }
+        } finally {
+          button.disabled = false;
+          button.textContent = "Save card to Messages";
+        }
+      }
+
       async function copyCard(item, name, age, message, button) {
         const cardInterior = item.querySelector(".card-interior");
         const text = formatCardText(name, age, message);
@@ -576,20 +790,7 @@
         button.textContent = "Copying…";
 
         try {
-          const canvas = await html2canvas(cardInterior, {
-            backgroundColor: "#fffdf7",
-            scale: 2,
-            useCORS: true,
-            logging: false,
-          });
-
-          const imageBlob = await new Promise((resolve, reject) => {
-            canvas.toBlob((blob) => {
-              if (blob) resolve(blob);
-              else reject(new Error("Failed to create image"));
-            }, "image/png");
-          });
-
+          const imageBlob = await renderCardImage(cardInterior);
           const textBlob = new Blob([text], { type: "text/plain" });
 
           if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
@@ -603,24 +804,24 @@
               showToast("Card image & message copied!");
               return;
             } catch {
-              // Fall through to image-only or text-only copy
+              // Fall through
             }
           }
 
           if (navigator.clipboard?.write) {
             await navigator.clipboard.write([new ClipboardItem({ "image/png": imageBlob })]);
-            showToast("Card image copied! (Paste into Messages, Notes, etc.)");
+            showToast("Card image copied!");
             return;
           }
 
           await navigator.clipboard.writeText(text);
-          showToast("Message copied! (Image copy not supported in this browser)");
+          showToast("Message copied!");
         } catch {
           try {
             await navigator.clipboard.writeText(text);
-            showToast("Message copied! (Could not copy image)");
+            showToast("Message copied!");
           } catch {
-            showToast("Could not copy — try selecting manually");
+            showToast("Could not copy — try Save card to Messages");
           }
         } finally {
           button.disabled = false;
@@ -632,12 +833,21 @@
         const toast = document.getElementById("toast");
         toast.textContent = message;
         toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 2500);
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      function addCard(name, age, hobby) {
+        const message = generateMessage(name, age, hobby);
+        const card = createCardElement(name, age, message);
+        emptyState.hidden = true;
+        cardsStack.hidden = false;
+        cardsStack.prepend(card);
       }
 
       const form = document.getElementById("card-form");
       const cardsStack = document.getElementById("cards-stack");
       const emptyState = document.getElementById("empty-state");
+      const luckyBtn = document.getElementById("lucky-btn");
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -646,13 +856,20 @@
         const hobby = document.getElementById("hobby").value.trim();
 
         if (!name || !hobby || !age) return;
+        addCard(name, age, hobby);
+      });
 
-        const message = generateMessage(name, age, hobby);
-        const card = createCardElement(name, age, message);
+      luckyBtn.addEventListener("click", () => {
+        const name = pickRandom(luckyNames);
+        const age = Math.floor(Math.random() * 53) + 18;
+        const hobby = pickRandom(luckyHobbies);
 
-        emptyState.hidden = true;
-        cardsStack.hidden = false;
-        cardsStack.prepend(card);
+        document.getElementById("name").value = name;
+        document.getElementById("age").value = age;
+        document.getElementById("hobby").value = hobby;
+
+        addCard(name, age, hobby);
+        showToast(`Lucky pick: ${name}, ${age}, loves ${hobby}!`);
       });
     </script>
   </body>
