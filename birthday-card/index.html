@@ -356,7 +356,7 @@
         position: relative;
         --fold: rgba(201, 24, 74, 0.2);
         --ink-soft: #9a6078;
-        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.56) 0%, rgba(255, 232, 239, 0.6) 55%, rgba(255, 214, 224, 0.66) 100%);
+        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.32) 0%, rgba(255, 232, 239, 0.36) 55%, rgba(255, 214, 224, 0.4) 100%);
       }
 
       .card-interior::after {
@@ -385,7 +385,7 @@
 
       .theme-party {
         --fold: rgba(201, 24, 74, 0.22);
-        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.56) 0%, rgba(255, 232, 239, 0.6) 55%, rgba(255, 214, 224, 0.66) 100%);
+        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.32) 0%, rgba(255, 232, 239, 0.36) 55%, rgba(255, 214, 224, 0.4) 100%);
       }
 
       .theme-party .card-left {
@@ -394,7 +394,7 @@
 
       .theme-garden {
         --fold: rgba(123, 97, 255, 0.28);
-        --portrait-wash: linear-gradient(165deg, rgba(43, 18, 76, 0.58) 0%, rgba(82, 43, 91, 0.62) 45%, rgba(61, 28, 79, 0.7) 100%);
+        --portrait-wash: linear-gradient(165deg, rgba(43, 18, 76, 0.42) 0%, rgba(82, 43, 91, 0.46) 45%, rgba(61, 28, 79, 0.52) 100%);
       }
 
       .theme-garden .card-left {
@@ -407,6 +407,7 @@
 
       .theme-garden .vibe-text {
         color: #e0aaff;
+        text-shadow: 0 1px 3px rgba(43, 18, 76, 0.7);
       }
 
       .theme-garden .age-badge {
@@ -425,7 +426,7 @@
 
       .theme-carnival {
         --fold: rgba(0, 180, 216, 0.28);
-        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 176, 0.54) 0%, rgba(144, 224, 239, 0.58) 50%, rgba(72, 202, 228, 0.64) 100%);
+        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 176, 0.3) 0%, rgba(144, 224, 239, 0.34) 50%, rgba(72, 202, 228, 0.4) 100%);
       }
 
       .theme-carnival .card-left {
@@ -476,7 +477,7 @@
         position: absolute;
         inset: 0;
         z-index: 0;
-        background: url("images/family-portrait.jpg") center 28% / cover no-repeat;
+        background: url("images/family-portrait.jpg") center 76% / cover no-repeat;
         pointer-events: none;
       }
 
@@ -580,6 +581,32 @@
         gap: 4px;
       }
 
+      .family-frame {
+        width: 86px;
+        height: 104px;
+        margin: 2px 0 4px;
+        border-radius: 14px;
+        background: url("images/family-portrait.jpg") center 78% / cover no-repeat;
+        box-shadow:
+          0 0 0 3px #d4af37,
+          0 0 0 5px #fff8e7,
+          0 6px 14px rgba(74, 25, 66, 0.28);
+      }
+
+      .theme-garden .family-frame {
+        box-shadow:
+          0 0 0 3px #c77dff,
+          0 0 0 5px #ffe566,
+          0 6px 14px rgba(0, 0, 0, 0.35);
+      }
+
+      .theme-carnival .family-frame {
+        box-shadow:
+          0 0 0 3px #ff9f1c,
+          0 0 0 5px #fff8e7,
+          0 6px 14px rgba(2, 48, 71, 0.28);
+      }
+
       .card-left .party-banner {
         margin: 0 0 2px;
         padding: 5px 16px;
@@ -640,6 +667,7 @@
         letter-spacing: 0.22em;
         text-transform: uppercase;
         color: #c9184a;
+        text-shadow: 0 1px 2px rgba(255, 253, 249, 0.85);
       }
 
       .card-left .age-badge {
@@ -1162,6 +1190,7 @@
           <div class="card-left-content">
             <p class="party-banner">${theme.banner}</p>
             <p class="vibe-text">${theme.vibe}</p>
+            <div class="family-frame" role="img" aria-label="Family portrait"></div>
             <div class="art-row">
               ${themeArt(theme.id)}
             </div>
@@ -1446,20 +1475,20 @@
 
         const portrait = await loadFamilyPortrait();
         if (portrait) {
-          drawCoverImage(ctx, portrait, 0, 0, leftW, height, 0.28);
+          drawCoverImage(ctx, portrait, 0, 0, leftW, height, 0.76);
           const wash = ctx.createLinearGradient(0, 0, leftW, height);
           if (theme.id === "garden") {
-            wash.addColorStop(0, "rgba(43, 18, 76, 0.58)");
-            wash.addColorStop(0.45, "rgba(82, 43, 91, 0.62)");
-            wash.addColorStop(1, "rgba(61, 28, 79, 0.7)");
+            wash.addColorStop(0, "rgba(43, 18, 76, 0.42)");
+            wash.addColorStop(0.45, "rgba(82, 43, 91, 0.46)");
+            wash.addColorStop(1, "rgba(61, 28, 79, 0.52)");
           } else if (theme.id === "carnival") {
-            wash.addColorStop(0, "rgba(255, 243, 176, 0.54)");
-            wash.addColorStop(0.5, "rgba(144, 224, 239, 0.58)");
-            wash.addColorStop(1, "rgba(72, 202, 228, 0.64)");
+            wash.addColorStop(0, "rgba(255, 243, 176, 0.3)");
+            wash.addColorStop(0.5, "rgba(144, 224, 239, 0.34)");
+            wash.addColorStop(1, "rgba(72, 202, 228, 0.4)");
           } else {
-            wash.addColorStop(0, "rgba(255, 243, 214, 0.56)");
-            wash.addColorStop(0.55, "rgba(255, 232, 239, 0.6)");
-            wash.addColorStop(1, "rgba(255, 214, 224, 0.66)");
+            wash.addColorStop(0, "rgba(255, 243, 214, 0.32)");
+            wash.addColorStop(0.55, "rgba(255, 232, 239, 0.36)");
+            wash.addColorStop(1, "rgba(255, 214, 224, 0.4)");
           }
           ctx.fillStyle = wash;
           ctx.fillRect(0, 0, leftW, height);
@@ -1496,17 +1525,33 @@
         ctx.font = "800 16px Nunito, sans-serif";
         ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, 130);
 
+        if (portrait) {
+          const frameW = 168;
+          const frameH = 200;
+          const frameX = leftW / 2 - frameW / 2;
+          const frameY = 148;
+          drawCoverImage(ctx, portrait, frameX, frameY, frameW, frameH, 0.78);
+          ctx.strokeStyle = theme.id === "garden" ? "#c77dff" : theme.id === "carnival" ? "#ff9f1c" : "#d4af37";
+          ctx.lineWidth = 8;
+          drawRoundRect(ctx, frameX, frameY, frameW, frameH, 18);
+          ctx.stroke();
+          ctx.strokeStyle = theme.id === "garden" ? "#ffe566" : "#fff8e7";
+          ctx.lineWidth = 3;
+          drawRoundRect(ctx, frameX + 8, frameY + 8, frameW - 16, frameH - 16, 12);
+          ctx.stroke();
+        }
+
         if (theme.id === "garden") {
-          drawRoseBloom(ctx, leftW / 2 - 40, 230);
-          drawRoseBloom(ctx, leftW / 2 + 40, 250);
+          drawRoseBloom(ctx, leftW / 2 - 40, 390);
+          drawRoseBloom(ctx, leftW / 2 + 40, 410);
         } else {
-          drawCake(ctx, leftW / 2, 210);
+          drawCake(ctx, leftW / 2, 380);
           if (theme.id === "party") {
-            drawRoseBloom(ctx, leftW / 2 + 90, 250);
+            drawRoseBloom(ctx, leftW / 2 + 90, 410);
           }
         }
 
-        const badgeY = 430;
+        const badgeY = 540;
         const badgeGrad = ctx.createLinearGradient(leftW / 2 - 80, badgeY, leftW / 2 + 80, badgeY + 80);
         badgeGrad.addColorStop(0, p.badge[0]);
         badgeGrad.addColorStop(1, p.badge[1]);
