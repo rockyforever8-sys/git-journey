@@ -41,8 +41,7 @@
         inset: 0;
         z-index: 0;
         background:
-          url("images/family-portrait.jpg") center 28% / cover no-repeat;
-        filter: saturate(0.85) brightness(0.92);
+          url("images/family-portrait.jpg") center top / 100% auto no-repeat;
       }
 
       body::after {
@@ -51,9 +50,13 @@
         inset: 0;
         z-index: 0;
         background:
-          radial-gradient(circle at 12% 18%, rgba(255, 77, 109, 0.12), transparent 32%),
-          radial-gradient(circle at 88% 80%, rgba(255, 183, 3, 0.1), transparent 28%),
-          linear-gradient(160deg, rgba(255, 240, 243, 0.78) 0%, rgba(255, 248, 240, 0.74) 42%, rgba(255, 229, 236, 0.8) 100%);
+          linear-gradient(
+            180deg,
+            rgba(255, 240, 243, 0.04) 0%,
+            rgba(255, 240, 243, 0.1) 34%,
+            rgba(255, 248, 240, 0.42) 58%,
+            rgba(255, 229, 236, 0.78) 100%
+          );
         pointer-events: none;
       }
 
@@ -223,8 +226,9 @@
       .subtitle {
         margin: 0;
         font-size: 1.05rem;
-        color: #8b5a7a;
+        color: #5c3d4a;
         font-weight: 600;
+        text-shadow: 0 1px 0 #fff, 0 0 12px rgba(255, 255, 255, 0.95);
       }
 
       .layout {
@@ -237,6 +241,10 @@
       @media (max-width: 860px) {
         .layout {
           grid-template-columns: 1fr;
+        }
+
+        .card-interior {
+          --portrait-strip: 112px;
         }
       }
 
@@ -345,6 +353,7 @@
         min-height: 380px;
         display: grid;
         grid-template-columns: 42% 1fr;
+        grid-template-rows: auto 1fr;
         border-radius: 14px;
         overflow: hidden;
         box-shadow:
@@ -356,7 +365,7 @@
         position: relative;
         --fold: rgba(201, 24, 74, 0.2);
         --ink-soft: #9a6078;
-        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.32) 0%, rgba(255, 232, 239, 0.36) 55%, rgba(255, 214, 224, 0.4) 100%);
+        --portrait-strip: 132px;
       }
 
       .card-interior::after {
@@ -373,7 +382,7 @@
       .card-interior::before {
         content: "";
         position: absolute;
-        top: 0;
+        top: var(--portrait-strip);
         bottom: 0;
         left: 42%;
         width: 2px;
@@ -385,7 +394,6 @@
 
       .theme-party {
         --fold: rgba(201, 24, 74, 0.22);
-        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 214, 0.32) 0%, rgba(255, 232, 239, 0.36) 55%, rgba(255, 214, 224, 0.4) 100%);
       }
 
       .theme-party .card-left {
@@ -394,7 +402,6 @@
 
       .theme-garden {
         --fold: rgba(123, 97, 255, 0.28);
-        --portrait-wash: linear-gradient(165deg, rgba(43, 18, 76, 0.42) 0%, rgba(82, 43, 91, 0.46) 45%, rgba(61, 28, 79, 0.52) 100%);
       }
 
       .theme-garden .card-left {
@@ -426,7 +433,6 @@
 
       .theme-carnival {
         --fold: rgba(0, 180, 216, 0.28);
-        --portrait-wash: linear-gradient(165deg, rgba(255, 243, 176, 0.3) 0%, rgba(144, 224, 239, 0.34) 50%, rgba(72, 202, 228, 0.4) 100%);
       }
 
       .theme-carnival .card-left {
@@ -459,6 +465,7 @@
       .card-right {
         padding: 20px 18px;
         position: relative;
+        grid-row: 2;
       }
 
       .card-left {
@@ -472,22 +479,12 @@
         min-height: 380px;
       }
 
-      .card-left::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background: url("images/family-portrait.jpg") center 76% / cover no-repeat;
-        pointer-events: none;
-      }
-
-      .card-left::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background: var(--portrait-wash);
-        pointer-events: none;
+      .card-portrait-strip {
+        grid-column: 1 / -1;
+        height: var(--portrait-strip);
+        background: url("images/family-portrait.jpg") center top / cover no-repeat;
+        box-shadow: inset 0 -2px 0 rgba(212, 175, 55, 0.45);
+        z-index: 1;
       }
 
       .card-left .balloon,
@@ -579,32 +576,6 @@
         flex-direction: column;
         align-items: center;
         gap: 4px;
-      }
-
-      .family-frame {
-        width: 86px;
-        height: 104px;
-        margin: 2px 0 4px;
-        border-radius: 14px;
-        background: url("images/family-portrait.jpg") center 78% / cover no-repeat;
-        box-shadow:
-          0 0 0 3px #d4af37,
-          0 0 0 5px #fff8e7,
-          0 6px 14px rgba(74, 25, 66, 0.28);
-      }
-
-      .theme-garden .family-frame {
-        box-shadow:
-          0 0 0 3px #c77dff,
-          0 0 0 5px #ffe566,
-          0 6px 14px rgba(0, 0, 0, 0.35);
-      }
-
-      .theme-carnival .family-frame {
-        box-shadow:
-          0 0 0 3px #ff9f1c,
-          0 0 0 5px #fff8e7,
-          0 6px 14px rgba(2, 48, 71, 0.28);
       }
 
       .card-left .party-banner {
@@ -1190,7 +1161,6 @@
           <div class="card-left-content">
             <p class="party-banner">${theme.banner}</p>
             <p class="vibe-text">${theme.vibe}</p>
-            <div class="family-frame" role="img" aria-label="Family portrait"></div>
             <div class="art-row">
               ${themeArt(theme.id)}
             </div>
@@ -1415,8 +1385,9 @@
         const greeting = `Dear ${name},`;
         const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
         const sign = theme.sign;
-        const textHeight = 70 + bodyLines.length * 44 + 70;
-        const height = Math.max(720, textHeight + 80);
+        const stripH = 250;
+        const textHeight = stripH + 50 + bodyLines.length * 44 + 70;
+        const height = Math.max(800, textHeight + 80);
 
         const canvas = document.createElement("canvas");
         canvas.width = width;
@@ -1473,29 +1444,15 @@
         ctx.fillStyle = leftGrad;
         ctx.fillRect(0, 0, leftW, height);
 
-        const portrait = await loadFamilyPortrait();
-        if (portrait) {
-          drawCoverImage(ctx, portrait, 0, 0, leftW, height, 0.76);
-          const wash = ctx.createLinearGradient(0, 0, leftW, height);
-          if (theme.id === "garden") {
-            wash.addColorStop(0, "rgba(43, 18, 76, 0.42)");
-            wash.addColorStop(0.45, "rgba(82, 43, 91, 0.46)");
-            wash.addColorStop(1, "rgba(61, 28, 79, 0.52)");
-          } else if (theme.id === "carnival") {
-            wash.addColorStop(0, "rgba(255, 243, 176, 0.3)");
-            wash.addColorStop(0.5, "rgba(144, 224, 239, 0.34)");
-            wash.addColorStop(1, "rgba(72, 202, 228, 0.4)");
-          } else {
-            wash.addColorStop(0, "rgba(255, 243, 214, 0.32)");
-            wash.addColorStop(0.55, "rgba(255, 232, 239, 0.36)");
-            wash.addColorStop(1, "rgba(255, 214, 224, 0.4)");
-          }
-          ctx.fillStyle = wash;
-          ctx.fillRect(0, 0, leftW, height);
-        }
-
         ctx.fillStyle = p.right;
         ctx.fillRect(leftW, 0, width - leftW, height);
+
+        const portrait = await loadFamilyPortrait();
+        if (portrait) {
+          drawCoverImage(ctx, portrait, 0, 0, width, stripH, 0);
+          ctx.fillStyle = "rgba(212, 175, 55, 0.45)";
+          ctx.fillRect(0, stripH - 2, width, 2);
+        }
 
         const confetti = [
           [40, 40], [120, 90], [220, 50], [80, 180], [300, 140], [360, 80],
@@ -1514,44 +1471,28 @@
         paintThemeDecor(ctx, theme.id, leftW, height);
 
         ctx.fillStyle = p.banner;
-        drawRoundRect(ctx, leftW / 2 - 100, 70, 200, 36, 18);
+        drawRoundRect(ctx, leftW / 2 - 100, stripH + 24, 200, 36, 18);
         ctx.fill();
         ctx.fillStyle = "#fff";
         ctx.font = "800 18px Nunito, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(theme.banner.toUpperCase(), leftW / 2, 94);
+        ctx.fillText(theme.banner.toUpperCase(), leftW / 2, stripH + 48);
 
         ctx.fillStyle = p.vibe;
         ctx.font = "800 16px Nunito, sans-serif";
-        ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, 130);
-
-        if (portrait) {
-          const frameW = 168;
-          const frameH = 200;
-          const frameX = leftW / 2 - frameW / 2;
-          const frameY = 148;
-          drawCoverImage(ctx, portrait, frameX, frameY, frameW, frameH, 0.78);
-          ctx.strokeStyle = theme.id === "garden" ? "#c77dff" : theme.id === "carnival" ? "#ff9f1c" : "#d4af37";
-          ctx.lineWidth = 8;
-          drawRoundRect(ctx, frameX, frameY, frameW, frameH, 18);
-          ctx.stroke();
-          ctx.strokeStyle = theme.id === "garden" ? "#ffe566" : "#fff8e7";
-          ctx.lineWidth = 3;
-          drawRoundRect(ctx, frameX + 8, frameY + 8, frameW - 16, frameH - 16, 12);
-          ctx.stroke();
-        }
+        ctx.fillText(theme.vibe.toUpperCase(), leftW / 2, stripH + 78);
 
         if (theme.id === "garden") {
-          drawRoseBloom(ctx, leftW / 2 - 40, 390);
-          drawRoseBloom(ctx, leftW / 2 + 40, 410);
+          drawRoseBloom(ctx, leftW / 2 - 40, 430);
+          drawRoseBloom(ctx, leftW / 2 + 40, 450);
         } else {
-          drawCake(ctx, leftW / 2, 380);
+          drawCake(ctx, leftW / 2, 420);
           if (theme.id === "party") {
-            drawRoseBloom(ctx, leftW / 2 + 90, 410);
+            drawRoseBloom(ctx, leftW / 2 + 90, 450);
           }
         }
 
-        const badgeY = 540;
+        const badgeY = 580;
         const badgeGrad = ctx.createLinearGradient(leftW / 2 - 80, badgeY, leftW / 2 + 80, badgeY + 80);
         badgeGrad.addColorStop(0, p.badge[0]);
         badgeGrad.addColorStop(1, p.badge[1]);
@@ -1581,7 +1522,7 @@
         ctx.font = "800 15px Nunito, sans-serif";
         ctx.fillText(theme.ribbon.toUpperCase(), width - 180, 30);
 
-        let ty = 90;
+        let ty = stripH + 56;
         ctx.textAlign = "left";
         ctx.fillStyle = p.greet;
         ctx.font = "700 42px Caveat, cursive, sans-serif";
@@ -1643,6 +1584,7 @@
           <div class="card-stage">
             <div class="birthday-card">
               <div class="card-interior theme-${theme.id}">
+                <div class="card-portrait-strip" role="img" aria-label="Family portrait"></div>
                 <span class="flourish tl" aria-hidden="true"></span>
                 <span class="flourish tr" aria-hidden="true"></span>
                 <span class="flourish bl" aria-hidden="true"></span>
