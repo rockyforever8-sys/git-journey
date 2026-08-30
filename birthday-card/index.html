@@ -10,7 +10,6 @@
       href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
       :root {
         --rose: #c9184a;
@@ -264,15 +263,14 @@
 
       .birthday-card {
         width: 100%;
-        max-width: 520px;
-        aspect-ratio: 16 / 11;
+        max-width: 560px;
       }
 
       .card-interior {
         width: 100%;
-        height: 100%;
+        min-height: 380px;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 42% 1fr;
         border-radius: 10px;
         overflow: hidden;
         box-shadow:
@@ -317,7 +315,30 @@
         border-right: 1px solid rgba(201, 24, 74, 0.15);
         gap: 4px;
         overflow: hidden;
+        min-height: 380px;
       }
+
+      .balloon {
+        position: absolute;
+        width: 28px;
+        height: 36px;
+        border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+        box-shadow: inset -6px -4px 0 rgba(0, 0, 0, 0.08);
+      }
+
+      .balloon::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -18px;
+        width: 1px;
+        height: 18px;
+        background: #8b5a7a;
+      }
+
+      .balloon.red { background: #ff4d6d; top: 14px; left: 14px; }
+      .balloon.gold { background: #ffb703; top: 8px; right: 18px; transform: rotate(8deg); }
+      .balloon.rose { background: #c9184a; bottom: 22px; left: 18px; transform: rotate(-10deg); }
 
       .card-confetti {
         position: absolute;
@@ -421,7 +442,9 @@
           var(--paper);
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        padding-top: 36px;
+        padding-bottom: 24px;
       }
 
       .card-right .greeting {
@@ -434,11 +457,12 @@
 
       .card-right .message {
         font-family: "Caveat", cursive;
-        font-size: 1.25rem;
-        line-height: 1.5;
+        font-size: 1.2rem;
+        line-height: 1.45;
         color: var(--ink);
         margin: 0 0 16px;
-        min-height: 90px;
+        white-space: normal;
+        overflow-wrap: anywhere;
       }
 
       .card-right .signature {
@@ -673,26 +697,6 @@
         ].join("\n");
       }
 
-      async function renderCardImage(cardInterior) {
-        if (document.fonts?.ready) {
-          await document.fonts.ready;
-        }
-
-        const canvas = await html2canvas(cardInterior, {
-          backgroundColor: "#fffdf9",
-          scale: 2,
-          useCORS: true,
-          logging: false,
-        });
-
-        return new Promise((resolve, reject) => {
-          canvas.toBlob((blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error("Failed to create image"));
-          }, "image/png");
-        });
-      }
-
       function downloadBlob(blob, filename) {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -767,6 +771,9 @@
       function leftPanelHtml(age) {
         return `
           ${confettiHtml()}
+          <span class="balloon red" aria-hidden="true"></span>
+          <span class="balloon gold" aria-hidden="true"></span>
+          <span class="balloon rose" aria-hidden="true"></span>
           <div class="card-left-content">
             <p class="party-banner">Party time</p>
             <p class="vibe-text">Good vibes only</p>
@@ -779,6 +786,224 @@
               <p class="age-label">years young</p>
             </div>
           </div>`;
+      }
+
+      function wrapCanvasText(ctx, text, maxWidth) {
+        const words = text.split(/\s+/);
+        const lines = [];
+        let current = "";
+
+        for (const word of words) {
+          const test = current ? `${current} ${word}` : word;
+          if (ctx.measureText(test).width > maxWidth && current) {
+            lines.push(current);
+            current = word;
+          } else {
+            current = test;
+          }
+        }
+
+        if (current) lines.push(current);
+        return lines;
+      }
+
+      function drawRoundRect(ctx, x, y, w, h, r) {
+        const radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.arcTo(x + w, y, x + w, y + h, radius);
+        ctx.arcTo(x + w, y + h, x, y + h, radius);
+        ctx.arcTo(x, y + h, x, y, radius);
+        ctx.arcTo(x, y, x + w, y, radius);
+        ctx.closePath();
+      }
+
+      function drawBalloon(ctx, x, y, color) {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 22, 28, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.28)";
+        ctx.beginPath();
+        ctx.ellipse(x - 7, y - 8, 6, 9, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#8b5a7a";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y + 28);
+        ctx.quadraticCurveTo(x + 4, y + 48, x, y + 62);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawCake(ctx, x, y) {
+        ctx.save();
+        ctx.fillStyle = "#e8c9b0";
+        ctx.beginPath();
+        ctx.ellipse(x, y + 78, 52, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#f4a261";
+        drawRoundRect(ctx, x - 38, y + 46, 76, 28, 6);
+        ctx.fill();
+        ctx.fillStyle = "#fff5f0";
+        drawRoundRect(ctx, x - 38, y + 40, 76, 12, 5);
+        ctx.fill();
+        ctx.fillStyle = "#e76f51";
+        drawRoundRect(ctx, x - 28, y + 22, 56, 22, 5);
+        ctx.fill();
+        ctx.fillStyle = "#fff5f0";
+        drawRoundRect(ctx, x - 28, y + 16, 56, 10, 4);
+        ctx.fill();
+        ctx.fillStyle = "#f4a261";
+        drawRoundRect(ctx, x - 18, y + 2, 36, 16, 4);
+        ctx.fill();
+        ctx.fillStyle = "#fff5f0";
+        drawRoundRect(ctx, x - 18, y - 4, 36, 10, 4);
+        ctx.fill();
+        const candles = [
+          [x - 10, y - 22, "#ff4d6d"],
+          [x, y - 28, "#ffb703"],
+          [x + 10, y - 22, "#ff4d6d"],
+        ];
+        for (const [cx, cy, flame] of candles) {
+          ctx.fillStyle = "#ffd166";
+          ctx.fillRect(cx - 2, cy + 8, 4, 16);
+          ctx.fillStyle = flame;
+          ctx.beginPath();
+          ctx.ellipse(cx, cy + 4, 4, 6, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function paintSavedCard(name, age, message) {
+        const width = 1200;
+        const leftW = 500;
+        const pad = 48;
+        const measure = document.createElement("canvas").getContext("2d");
+        measure.font = "700 36px Caveat, cursive, sans-serif";
+        const greeting = `Dear ${name},`;
+        const bodyLines = wrapCanvasText(measure, message, width - leftW - pad * 2);
+        measure.font = "28px Caveat, cursive, sans-serif";
+        const sign = "With love, cake & roses";
+        const textHeight = 70 + bodyLines.length * 44 + 70;
+        const height = Math.max(720, textHeight + 80);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+
+        const leftGrad = ctx.createLinearGradient(0, 0, leftW, height);
+        leftGrad.addColorStop(0, "#fff3d6");
+        leftGrad.addColorStop(0.55, "#ffe8ef");
+        leftGrad.addColorStop(1, "#ffd6e0");
+        ctx.fillStyle = leftGrad;
+        ctx.fillRect(0, 0, leftW, height);
+
+        ctx.fillStyle = "#fffdf9";
+        ctx.fillRect(leftW, 0, width - leftW, height);
+
+        const confetti = [
+          [40, 40, "#ff4d6d"], [120, 90, "#ffb703"], [220, 50, "#c9184a"],
+          [80, 180, "#fb8500"], [300, 140, "#ffd166"], [360, 80, "#ff4d6d"],
+          [60, 320, "#2a9d8f"], [400, 260, "#c9184a"], [180, 280, "#ff8fab"],
+          [90, 480, "#ffb703"], [340, 420, "#ff4d6d"], [250, 520, "#fb8500"],
+          [430, 560, "#ffd166"], [30, 600, "#e07a5f"], [150, 640, "#c9184a"],
+          [380, 640, "#ff4d6d"], [280, 200, "#2a9d8f"], [420, 180, "#ffb703"],
+        ];
+        for (const [cx, cy, color] of confetti) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(0.4);
+          ctx.fillStyle = color;
+          ctx.fillRect(-6, -6, 12, 12);
+          ctx.restore();
+        }
+
+        drawBalloon(ctx, 70, 90, "#ff4d6d");
+        drawBalloon(ctx, 420, 80, "#ffb703");
+        drawBalloon(ctx, 90, height - 140, "#c9184a");
+
+        ctx.fillStyle = "#ffb703";
+        drawRoundRect(ctx, leftW / 2 - 90, 70, 180, 36, 18);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "800 18px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("PARTY TIME", leftW / 2, 94);
+
+        ctx.fillStyle = "#c9184a";
+        ctx.font = "800 16px Nunito, sans-serif";
+        ctx.fillText("GOOD VIBES ONLY", leftW / 2, 130);
+
+        drawCake(ctx, leftW / 2, 210);
+
+        const badgeY = 430;
+        const badgeGrad = ctx.createLinearGradient(leftW / 2 - 80, badgeY, leftW / 2 + 80, badgeY + 80);
+        badgeGrad.addColorStop(0, "#c9184a");
+        badgeGrad.addColorStop(1, "#ff4d6d");
+        ctx.fillStyle = badgeGrad;
+        drawRoundRect(ctx, leftW / 2 - 80, badgeY, 160, 86, 43);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "700 52px Caveat, cursive, sans-serif";
+        ctx.fillText(String(age), leftW / 2, badgeY + 50);
+        ctx.font = "800 14px Nunito, sans-serif";
+        ctx.fillText("YEARS YOUNG", leftW / 2, badgeY + 72);
+
+        ctx.strokeStyle = "rgba(201, 24, 74, 0.25)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(leftW, 0);
+        ctx.lineTo(leftW, height);
+        ctx.stroke();
+
+        const ribbonGrad = ctx.createLinearGradient(width - 280, 0, width - 40, 0);
+        ribbonGrad.addColorStop(0, "#ffb703");
+        ribbonGrad.addColorStop(1, "#ff4d6d");
+        ctx.fillStyle = ribbonGrad;
+        drawRoundRect(ctx, width - 280, 0, 220, 48, 12);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "800 16px Nunito, sans-serif";
+        ctx.fillText("HAPPY BIRTHDAY!", width - 170, 30);
+
+        let ty = 90;
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#c9184a";
+        ctx.font = "700 42px Caveat, cursive, sans-serif";
+        ctx.fillText(greeting, leftW + pad, ty);
+        ty += 58;
+
+        ctx.fillStyle = "#4a1942";
+        ctx.font = "36px Caveat, cursive, sans-serif";
+        for (const line of bodyLines) {
+          ctx.fillText(line, leftW + pad, ty);
+          ty += 44;
+        }
+
+        ctx.fillStyle = "#9a6078";
+        ctx.font = "28px Caveat, cursive, sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(sign, width - pad, height - 40);
+
+        return canvas;
+      }
+
+      async function renderCardImage(_cardInterior, name, age, message) {
+        if (document.fonts?.ready) {
+          await document.fonts.ready;
+        }
+
+        const canvas = paintSavedCard(name, age, message);
+        return new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Failed to create image"));
+          }, "image/png");
+        });
       }
 
       function createCardElement(name, age, message) {
@@ -830,7 +1055,7 @@
         button.textContent = "Saving…";
 
         try {
-          const imageBlob = await renderCardImage(cardInterior);
+          const imageBlob = await renderCardImage(cardInterior, name, age, message);
           const file = new File([imageBlob], filename, { type: "image/png" });
 
           if (navigator.share) {
@@ -852,7 +1077,7 @@
         } catch (err) {
           if (err?.name === "AbortError") return;
           try {
-            const imageBlob = await renderCardImage(cardInterior);
+            const imageBlob = await renderCardImage(cardInterior, name, age, message);
             downloadBlob(imageBlob, filename);
             showToast("Card downloaded — share it from your Photos app!");
           } catch {
@@ -872,7 +1097,7 @@
         button.textContent = "Copying…";
 
         try {
-          const imageBlob = await renderCardImage(cardInterior);
+          const imageBlob = await renderCardImage(cardInterior, name, age, message);
           const textBlob = new Blob([text], { type: "text/plain" });
 
           if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
