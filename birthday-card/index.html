@@ -786,7 +786,7 @@
         line-height: 1.5;
         color: var(--ink);
         margin: 0;
-        white-space: pre-wrap;
+        white-space: normal;
       }
 
       .card-right .signature {
@@ -1067,37 +1067,37 @@
 
       const templates = [
         (name, age, hobby) =>
-          `Happy ${age}th birthday.\nMay this year be kind, a little silly, and full of ${hobby}.`,
+          `Today's storyboard opens on ${name}, and she is already the star. First highlight: she walks in glowing at ${age}. Next shot: she talks about ${hobby} and the whole room leans in. Last frame: cake, cheers, and everyone knowing this day belongs to her.`,
         (name, age, hobby) =>
-          `${age} looks good on you.\nSave plenty of time for ${hobby} — and even more time for cake.`,
+          `If this year were a movie, ${name} would be the hero in every scene. We watch her turn ${age} with that same bright laugh, steal the spotlight with ${hobby}, and finish the night as the girl everyone came to celebrate.`,
         (name, age, hobby) =>
-          `Another trip around the sun.\nSame wonderful you, plus one more year of ${hobby} and frosting.`,
+          `Picture the highlight reel. ${name} lights the candles at ${age}, then the camera follows her through a favorite ${hobby} moment, then it holds on her smile while we sing. She is the leading lady. The rest of us are extras with cake.`,
         (name, age, hobby) =>
-          `The plan is simple:\nblow out ${age} candles,\nmake room for ${hobby},\nthen ask for a second slice.`,
+          `${name} arrives and the party finally starts. She is ${age} and somehow even more herself, then she dives into ${hobby} like it is the main plot. Cut to her smile. Happy birthday to our star.`,
         (name, age, hobby) =>
-          `You made it to ${age}.\nThat deserves applause, extra frosting, and a whole day of ${hobby}.`,
+          `This is ${name}'s highlight day. The opening shot is her at ${age}, already shining. The middle is all the little joys she collects, especially ${hobby}. The closing shot is her in the center, candles glowing, the hero of her own story.`,
         (name, age, hobby) =>
-          `Today we celebrate you —\n${age} years of heart, humor, and ${hobby}.`,
+          `Roll the tape on ${name}. We see her laugh, we see her at ${age} looking like the main character, and we see her light up the second ${hobby} enters the chat. No plot twist needed. She was the star the whole time.`,
         (name, age, hobby) =>
-          `May your wishes come true,\nyour cake be ridiculous,\nand ${hobby} keep making you grin.`,
+          `Happy birthday to ${name}, the girl this whole storyboard was drawn for. Frame by frame she turns ${age}, claims the dance floor, talks ${hobby} with her whole heart, and leaves us grinning like we just watched the best scene.`,
         (name, age, hobby) =>
-          `${age} candles, one wish,\nand all of us cheering you on.\nDon't forget ${hobby} later.`,
+          `The camera finds ${name} first, because of course it does. She is ${age} today, the hero of the house, the reason the cake exists, and the only person who can make ${hobby} sound like an adventure. We are just lucky to be in her frame.`,
         (name, age, hobby) =>
-          `Happy birthday.\nYou are ${age}, still you, and still making ${hobby} look like a superpower.`,
+          `Call it a birthday montage starring ${name}. First we catch that ${age}-year-old spark, then the way she cares about ${hobby}, then the moment she blows out the candles and the whole room belongs to her.`,
         (name, age, hobby) =>
-          `A tiny to-do list:\n1) Blow out ${age} flames\n2) Hug your people\n3) Enjoy ${hobby}\n4) Leave one slice for tomorrow`,
+          `${name} is not a guest in today's story. She is the title. At ${age} she still walks in like the heroine, turns ${hobby} into a standing ovation, and lets us throw sprinkles like confetti at the premiere.`,
         (name, age, hobby) =>
-          `Year ${age} starts now.\nOfficial activities: cake, laughing too loud, and ${hobby}.`,
+          `Once upon this birthday, ${name} took the lead. She hit ${age} with style, she made ${hobby} part of the magic, and she stood in the middle of the people who love her while the candles waited for their star.`,
         (name, age, hobby) =>
-          `You are not getting older.\nYou are collecting good years — this one is number ${age}, with ${hobby} on the side.`,
+          `Here is the story we keep replaying: ${name} at ${age}, center stage, a little frosting on her smile, talking about ${hobby} like it is treasure. That is the highlight. That is why she is today's hero.`,
         (name, age, hobby) =>
-          `Congratulations on ${age}.\nBenefits include cake, applause, and a perfect excuse to enjoy ${hobby}.`,
+          `Fade in on ${name}. She is ${age}, she is glowing, and the party rearranges itself around her. Then comes the ${hobby} chapter, then the cake chapter, then the quiet beat where we all know we came to celebrate the star.`,
         (name, age, hobby) =>
-          `Here's to ${age} trips around the sun —\nstill choosing ${hobby} over chores.\nCake is the plot twist.`,
+          `Today's feature presentation stars ${name}. Runtime: ${age} wonderful years. Best scenes include her laugh, her love of ${hobby}, and the look on her face when the candles come out. Critics agree. She is the highlight.`,
         (name, age, hobby) =>
-          `Today's forecast: 100% chance of you.\nHigh: ${age} years of charm.\nOvernight: ${hobby} and leftover cake.`,
+          `We could tell a hundred stories, but they all start with ${name}. She turns ${age} today, she brings ${hobby} into the room like sunshine, and she finishes as the birthday girl we cannot take our eyes off.`,
         (name, age, hobby) =>
-          `Rumor has it you traded a boring year for ${age} extra sparkles.\nPayment is cake. We accept sprinkles. ${hobby} is encouraged.`,
+          `If someone sketched the year in storyboard panels, every page would still point to ${name}. She is ${age} and proud, she fills the frames with ${hobby} and joy, and she ends as the hero blowing out the lights while we cheer.`,
       ];
 
       let lastTemplateIndex = -1;
